@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% load static %}
+	<head>
+		<title>IXPN MEMBERSHIP CONNECTION DATABASE</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link rel="stylesheet" href="{% static 'myStyle.css' %}" />
+		<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+		<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+		<script src="https://use.fontawesome.com/cc5e99677f.js"></script>
+	</head>
+	<body>
+	<!-- Header -->
+	<div class="header">
+		<h3>IXPN MEMBERS CONNECTION DATABASE</h3>
+		<img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block" alt="IXPN LOGO">
+	
+	</div>
+
+	<!-- The flexible grid (content) -->
+	<div class="row">
+		<div class="side">
+		
+		</div>
+		<div class="main">
+			{% block content %}{% endblock %}
+			
+	  	</div>
+	</div>
+
+	<!-- Footer -->
+	<div class="footer">
+		<p>© Internet Exchange point of Nigeria  {% now  "Y" %}</p>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'ajaxFormSubmit.js' %}"></script>
+
+	</body>
+	</html>

@@ -1,0 +1,32 @@
+{% extends 'account/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.port_capacity|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.port_fee|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ form.membership_fee|as_crispy_field }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-0">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+      </div>
+    </form>
+
+{% endblock %}

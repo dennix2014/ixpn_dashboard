@@ -1,0 +1,93 @@
+{% extends 'account/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="filter-form">
+<form method="get">
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            {{ filter.form.pop|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-4 mb-0">
+              {{ filter.form.port_capacity|as_crispy_field }}
+            </div>
+           
+    </div>
+    <div class="form-row">
+            <div class="form-group col-md-4 mb-0">
+                {{ filter.form.no_of_port|as_crispy_field }}
+              </div>
+              
+
+
+    </div>
+    <input type="submit" />
+    <input type="button" value="Reset" onClick="this.form.reset()" />
+</form>
+</div>
+
+
+    {{ html|safe}}
+
+<div class="row">
+    <div class="col-md-4">
+
+ 
+
+    {% for pop in pops %}
+    <a href="{% url 'edit_pop' pop.id pop.slug %}"><h4>{{ pop.name }}, {{ pop.state_located }}</h4></a>
+    {% endfor %}
+    </div>
+
+    <br><br><br>
+
+</div>
+<br><br><br>
+
+<div class="row">
+    <div class="col-md-4">
+
+ 
+
+    {% for organisation in organisations %}
+    <a href="{% url 'edit_organisation' organisation.id organisation.slug %}"><h6>{{ organisation.name }}</h6></a>
+    {% endfor %}
+    </div>
+
+    <br><br><br>
+
+</div>
+<br><br><br>
+<div class="row">
+    <div class="col-md-4">
+
+ 
+
+    {% for charge in charges %}
+    <a href="{% url 'edit_port_charge' charge.id charge.slug %}"><h6>{{ charge.charge }} - {{ charge.port_capacity }}</h6></a>
+    {% endfor %}
+    </div>
+
+    <br><br><br>
+
+</div>
+    
+<br><br><br>
+
+<a href="{% url 'add_pop' %}">Add POP</a>
+<br><br><br>
+<a href="{% url 'add_port_charge' %}">Add Port Charge</a>
+<br><br><br>
+<a href="{% url 'add_organisation' %}">Add organisation</a>
+<br><br><br>
+<a href="{% url 'add_port_connection' %}">Add Port Connection</a>
+<br><br><br>
+{% for p in pp %}
+{{ p.member }}
+<hr>
+{% endfor %}
+<br><br><br>
+
+   
+{% endblock %}
