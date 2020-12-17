@@ -57,7 +57,7 @@ status = [
     ('inactive', 'inactive')
 ]
 
-membership_type = [
+membership = [
     ('full', 'full'),
     ('associate', 'associate')
 ]

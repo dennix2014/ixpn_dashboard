@@ -19,4 +19,4 @@ class PortConnectionForm(ModelForm):
 class OrganisationForm(ModelForm):
     class Meta:
         model = Organisation
-        fields = ['name', 'status', 'membership_type', 'date_joined']
+        fields = ['name', 'status', 'membership', 'date_joined']

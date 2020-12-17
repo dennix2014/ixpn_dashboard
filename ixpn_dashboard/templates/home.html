@@ -1,23 +1,40 @@
 {% extends 'account/base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 
 {% block content %}
 <div class="filter-form">
 <form method="get">
-    <div class="form-row">
-        <div class="form-group col-md-4 mb-0">
+    <div class="form-row align-items-center">
+        <div class="form-group col-md-3 mb-4 p-4">
             {{ filter.form.pop|as_crispy_field }}
           </div>
-          <div class="form-group col-md-4 mb-0">
+          <div class="form-group col-md-3 p-4">
               {{ filter.form.port_capacity|as_crispy_field }}
             </div>
+            <div class="form-group col-md-3 p-4 date_field">
+                {{ filter.form.no_of_port__gte|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-3 p-4 date_field">
+                {{ filter.form.status|as_crispy_field }}
+              </div>
+              
+              
            
     </div>
-    <div class="form-row">
-            <div class="form-group col-md-4 mb-0">
-                {{ filter.form.no_of_port|as_crispy_field }}
+    <div class="form-row align-items-center">
+            
+              <div class="form-group col-md-3 p-4">
+                {{ filter.form.membership|as_crispy_field }}
               </div>
+              <div class="form-group col-md-3 p-4">
+                {{ filter.form.date_joined_min|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-3 p-4">
+                {{ filter.form.date_joined_max|as_crispy_field }}
+              </div>
+              
               
 
 

@@ -4,7 +4,7 @@ from django.utils import timezone
 from datetime import datetime
 from django.utils.text import slugify
 User = get_user_model()
-from members.all_choices import states_in_nigeria, ports, status, membership_type
+from members.all_choices import states_in_nigeria, ports, status, membership
 
 
 
@@ -50,7 +50,7 @@ class POP(Editor):
 class Organisation(Editor):
     name = models.CharField(max_length=100, unique=True)
     status = models.CharField(max_length=10, choices=status, default='active')
-    membership_type = models.CharField(max_length=20, choices=membership_type, default='full')
+    membership = models.CharField(max_length=20, choices=membership, default='full')
     date_joined = models.DateField(default=timezone.now)
    
 

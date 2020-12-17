@@ -46,29 +46,29 @@ def home(request):
         f'<td><a href="/port_connection/{item.id}/{item.slug}/"><h6>{ item.member }</h6></a></td>'
         f'<td>{item.pop}</td>'
         f'<td>{item.port_capacity}</td>'
-        f'<td>{item.member.membership_type}</td>'
+        f'<td>{item.member.membership}</td>'
         f'<td>{item.member.status}</td>'
         f'<td>{item.no_of_port}</td>')
 
         for charge in charges:
             if charge.port_capacity == item.port_capacity and \
                 item.member.status == 'active' and \
-                item.member.membership_type == 'full':
+                item.member.membership == 'full':
                 port_charge = item.no_of_port * charge.port_fee
                 membership_fee = charge.membership_fee
                 total_port_charges += port_charge
                 total_membership_fee += membership_fee
                 table_body += f'<td>{(port_charge):,}</td>'
                 table_body += f'<td>{(membership_fee):,}</td>'
-            elif item.member.status == 'inactive' and \
-                item.member.membership_type == 'associate' and \
+            elif (item.member.status == 'inactive' or \
+                item.member.membership == 'associate') and \
                 charge.port_capacity == item.port_capacity:
                 table_body += f'<td>0</td>'
                 table_body += f'<td>0</td>'
 
         table_body +=  f'</tr>'
         port_count += item.no_of_port
-    table_body += (f'<tr><td> - </td><td> - </td><td> - </td><td> - </td><td></td>'
+    table_body += (f'<tr><td><strong>TOTALS</strong></td><td> - </td><td> - </td><td> - </td><td></td>'
                     f'<td></td><td>{port_count}</td><td>{(total_port_charges):,}</td>'
                     f'<td>{(total_membership_fee):,}</td></tr>')
       
@@ -182,7 +182,7 @@ def add_organisation(request):
         if form.is_valid():
             organisation_obj.name =  request.POST['name']
             organisation_obj.status = request.POST['status']
-            organisation_obj.membership_type = request.POST['membership_type']
+            organisation_obj.membership = request.POST['membership']
             organisation_obj.date_joined = request.POST['date_joined']
             organisation_obj.created_by = request.user
             organisation_obj.save()

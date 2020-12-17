@@ -88,7 +88,7 @@ date = datetime.date.today()
 
 
 # # Insert into members table
-task = "INSERT INTO members_organisation (name, status, membership_type, created_by_id, date_joined, created_on, slug) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+task = "INSERT INTO members_organisation (name, status, membership, created_by_id, date_joined, created_on, slug) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 with open('/home/uchechukwu/Documents/projects/ixpn_dashboard/ixpn_dashboard/members.csv') as f:
     data=[tuple(line) for line in csv.reader(f)]
 

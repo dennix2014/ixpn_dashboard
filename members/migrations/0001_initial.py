@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('slug', models.SlugField()),
                 ('name', models.CharField(max_length=100, unique=True)),
                 ('status', models.CharField(choices=[('active', 'active'), ('inactive', 'inactive')], default='active', max_length=10)),
-                ('membership_type', models.CharField(choices=[('full', 'full'), ('associate', 'associate')], default='full', max_length=20)),
+                ('membership', models.CharField(choices=[('full', 'full'), ('associate', 'associate')], default='full', max_length=20)),
                 ('date_joined', models.DateField(default=django.utils.timezone.now)),
             ],
             options={
