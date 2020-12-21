@@ -6,29 +6,26 @@ from django.http import HttpResponseForbidden
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .models import PortConnection, Fee, POP, Organisation
+from .models import PortConnection, POP, Member
 from .filters import PortFilter
-from .forms import OrganisationForm, POPForm, FeeForm, PortConnectionForm
-# Create your views here.
+from .forms import MemberForm, POPForm, PortConnectionForm
+permission_denied_msg = """
+Permission denied. Please contact app admin if you feel this is a mistake"""
 
-
+@login_required
 def home(request):
-    pp = PortConnection.objects.filter(member__status='active').order_by('member__name')
-    ports = PortConnection.objects.all().order_by('member__name')
-    charges = Fee.objects.all()
-    pops = POP.objects.all()
-    organisations = Organisation.objects.all().order_by('name')
+
+    ports = PortConnection.objects.all().order_by('member_name__short_name')
     f = PortFilter(request.GET, queryset=ports)
-    html = ''
-    table_body = ''
-    total_port_charges = 0
+    total_port_fees = 0
     total_membership_fee = 0
     port_count = 0
-    table_heading = """
-    <table><caption>ALL MEMBERS</caption>
+    
+    table_body = """
+    <table><caption>ALL PORT CONNECTIONS</caption>
         <tr>
             <th>S/NO</th>
-            <th>Menber</th>
+            <th>MEMBER</th>
             <th>POP</th>
             <th>PORT CAPACITY</th>
             <th>MEMBERSHIP</th>
@@ -36,177 +33,215 @@ def home(request):
             <th>NO OF PORTS</th>
             <th>PORT FEE</th>
             <th>MEMBERSHIP FEE</th>
-            
-         
-         
         </tr>"""
-    for index, item in enumerate(f.qs):
-        table_body += (f'<tr>'
-        f'<td>{index + 1}</td>'
-        f'<td><a href="/port_connection/{item.id}/{item.slug}/"><h6>{ item.member }</h6></a></td>'
-        f'<td>{item.pop}</td>'
-        f'<td>{item.port_capacity}</td>'
-        f'<td>{item.member.membership}</td>'
-        f'<td>{item.member.status}</td>'
-        f'<td>{item.no_of_port}</td>')
 
-        for charge in charges:
-            if charge.port_capacity == item.port_capacity and \
-                item.member.status == 'active' and \
-                item.member.membership == 'full':
-                port_charge = item.no_of_port * charge.port_fee
-                membership_fee = charge.membership_fee
-                total_port_charges += port_charge
-                total_membership_fee += membership_fee
-                table_body += f'<td>{(port_charge):,}</td>'
-                table_body += f'<td>{(membership_fee):,}</td>'
-            elif (item.member.status == 'inactive' or \
-                item.member.membership == 'associate') and \
-                charge.port_capacity == item.port_capacity:
-                table_body += f'<td>0</td>'
-                table_body += f'<td>0</td>'
+    for index, port in enumerate(f.qs):
+        table_body += f'<tr><td>{index + 1}</td>'
 
-        table_body +=  f'</tr>'
-        port_count += item.no_of_port
-    table_body += (f'<tr><td><strong>TOTALS</strong></td><td> - </td><td> - </td><td> - </td><td></td>'
-                    f'<td></td><td>{port_count}</td><td>{(total_port_charges):,}</td>'
+        #if request.user has the right permissions, then show edit option
+        if request.user.has_perm('members.add_portconnection'):
+            memb = f'<td><a href="/edit_portconnection/{port.id}/{port.slug}/">{port.member_name}</a></td>'
+        else:
+            memb =  f'<td>{port.member_name}</td>'
+
+        table_body += (f'{memb}'
+        f'<td>{port.pop}</td>'
+        f'<td>{port.port_capacity}</td>'
+        f'<td>{port.member_name.membership}</td>'
+        f'<td>{port.member_name.status}</td>'
+        f'<td>{port.no_of_port}</td>')
+        
+        """if member is active and a full member, then apply fees. Also count
+            total no of ports"""
+            
+        if port.member_name.status == 'active' and \
+            port.member_name.membership == 'full':
+            table_body += f'<td>{port.port_fee}</td>'
+            table_body += f'<td>{(port.membership_fee):,}</td></tr>'
+
+            total_membership_fee += port.membership_fee
+            total_port_fees += port.port_fee
+                
+        elif port.member_name.status == 'inactive' or \
+            port.member_name.membership == 'associate':
+            table_body += f'<td>0</td><td>0</td></tr>'
+
+        port_count += port.no_of_port
+
+        # Add row for total no of port, total port and membership fee
+    table_body += (f'<tr><td><strong>TOTAL</strong></td>'
+                    f'<td> - </td>'
+                    f'<td> - </td>'
+                    f'<td> - </td>'
+                    f'<td> - </td>'
+                    f'<td> - </td>'
+                    f'<td>{port_count}</td>'
+                    f'<td>{(total_port_fees):,}</td>'
                     f'<td>{(total_membership_fee):,}</td></tr>')
       
-    table_body += f'</table> <br><br><br>'
-
-    html = table_heading + table_body
-
+    table_body += f'</table><br>'
     context = {
-        'html':html, 
-        'filter': f, 
-        'pops': pops,
-        'organisations': organisations,
-        'charges': charges,
-        'pp': pp}
-   
+        'html':table_body,
+        'filter':f,}
 
     return render(request, 'home.html', context)
 
+def delete_member(request, pk, slug):
+    p = Member.objects.get(pk=pk)
+    p.delete()
+    messages.success(request, f'{p} successfully deleted')
+    return redirect('home')
+
+@login_required
+def add_or_edit_pop(request, pk=None, slug=None):
+    if request.user.has_perm('members.add_pop'):
+        pop_obj = get_object_or_404(POP, pk=pk) if pk else None
+        form = POPForm(request.POST, request.FILES, instance=pop_obj)
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.created_by = request.user
+                obj.save()
+                messages.success(request, f'{obj} saved successfully')
+                return redirect('home')
+            else:
+                form = POPForm(instance=pop_obj)
+                messages.error(request, 'Correct errors indicated and try again')
+                return render(request, 'add_or_edit_pop.html', {'form': form})
+
+        elif request.method == 'GET':
+            form = POPForm(instance=pop_obj)
+            context = {'form': form, 'pop_obj': pop_obj}
+            return render(request, 'add_or_edit_pop.html', context)
+
+    else:
+        messages.error(request, permission_denied_msg)
+        return redirect('home')
+
+@login_required
+def add_or_edit_portconnection(request, pk=None, slug=None):
+    if request.user.has_perm('members.add_portconnection'):
+        portconnection_obj = get_object_or_404(PortConnection, pk=pk) if pk else None
+        form = PortConnectionForm(request.POST, request.FILES, instance=portconnection_obj)
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.created_by = request.user
+                obj.save()
+                messages.success(request, f'{obj} saved successfully')
+                return redirect('home')
+            else:
+                form = PortConnectionForm(instance=portconnection_obj)
+                messages.error(request, 'Correct errors indicated and try again')
+                return render(request, 'add_or_edit_portconnection.html', {'form': form})
+
+        elif request.method == 'GET':
+            form = PortConnectionForm(instance=portconnection_obj)
+            context = {'form': form, 'port_obj': portconnection_obj}
+            return render(request, 'add_or_edit_portconnection.html', context)
+
+    else:
+        messages.error(request, permission_denied_msg)
+        return redirect('home')
 
 
-def edit_pop(request, pk, slug):
-    pops = POP.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = POPForm(request.POST, request.FILES, instance=pops)
-        if form.is_valid():
-            pops.save()
-            messages.success(request, 'POP edited successfully')
-            return redirect('home')
+@login_required
+def add_or_edit_member(request, pk=None, slug=None):
+    if request.user.has_perm('members.add_member'):
+        member_obj = get_object_or_404(Member, pk=pk) if pk else None
+        form = MemberForm(request.POST, request.FILES, 
+                                instance=member_obj)
 
-    elif request.method == 'GET':
-        form = POPForm(instance=pops)
-        return render(request, 'edit_pop.html', {'form': form} )
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.created_by = request.user
+                messages.success(request, f'{obj} saved successfully')
+                obj.save()
+                return redirect('home')
+            else:
+                form = MemberForm(instance=member_obj)
+                messages.error(request, 'Correct errors indicated and try again')
+                return render(request, 'organisation.html', {'form': form})
 
+        elif request.method == 'GET':
+            form = MemberForm(instance=member_obj)
+            context = {
+                'form': form,
+                'member_obj': member_obj,
+            }
+            return render(request, 'add_or_edit_member.html', context)
 
-def edit_organisation(request, pk, slug):
-    organisations = Organisation.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = OrganisationForm(request.POST, request.FILES, instance=organisations)
-        if form.is_valid():
-            organisations.save()
-            messages.success(request, 'organisation edited successfully')
-            return redirect('home')
-
-    elif request.method == 'GET':
-        form = OrganisationForm(instance=organisations)
-        return render(request, 'edit_organisation.html', {'form': form} )
-
-
-def edit_port_connection(request, pk, slug):
-    port_connections = PortConnection.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = PortConnectionForm(request.POST, request.FILES, instance=port_connections)
-        if form.is_valid():
-            port_connections.save()
-            messages.success(request, 'PortConnection edited successfully')
-            return redirect('home')
-
-    elif request.method == 'GET':
-        form = PortConnectionForm(instance=port_connections)
-        return render(request, 'edit_port_connection.html', {'form': form} )
-
-def edit_port_charge(request, pk, slug):
-    port_charges = Fee.objects.get(pk=pk)
-    if request.method == 'POST':
-        form = FeeForm(request.POST, request.FILES, instance=port_charges)
-        if form.is_valid():
-            port_charges.save()
-            messages.success(request, 'Fees edited successfully')
-            return redirect('home')
-
-    elif request.method == 'GET':
-        form = FeeForm(instance=port_charges)
-        return render(request, 'edit_port_charge.html', {'form': form} )
-
-def add_pop(request):
-    pop_obj = POP()
-    if request.method == 'POST':
-        form = POPForm(request.POST, request.FILES)
-        if form.is_valid():
-            pop_obj.name =  request.POST['name']
-            pop_obj.state_located =  request.POST['state_located']
-            pop_obj.created_by = request.user
-            pop_obj.save()
-            return redirect('home')
-
-    elif request.method == 'GET':
-        form = POPForm()
-        return render(request, 'edit_pop.html', {'form': form})
+    else:
+        messages.error(request, permission_denied_msg)
+        return redirect('home')
 
 
-def add_port_charge(request):
-    port_charge_obj = Fee()
-    if request.method == 'POST':
-        form = FeeForm(request.POST, request.FILES)
-        if form.is_valid():
-            port_charge_obj.port_capacity = request.POST['port_capacity']
-            port_charge_obj.port_fee =  request.POST['port_fee']
-            port_charge_obj.membership_fee =  request.POST['membership_fee']
-            port_charge_obj.created_by = request.user
-            port_charge_obj.save()
-            return redirect('home')
+def list_members(request):
+    members = Member.objects.all().order_by('short_name')
 
-    elif request.method == 'GET':
-        form = FeeForm()
-        return render(request, 'edit_port_charge.html', {'form': form})
+    table_body = """
+    <table><caption>ALL MEMBERS</caption>
+        <tr>
+            <th>S/NO</th>
+            <th>NAME</th>
+            <th>STATUS</th>
+            <th>MEMBERSHIP</th>
+            <th>DATE JOINED</th>
+          
+        </tr>"""
 
-def add_organisation(request):
-    organisation_obj = Organisation()
-    if request.method == 'POST':
-        form = OrganisationForm(request.POST, request.FILES)
-        if form.is_valid():
-            organisation_obj.name =  request.POST['name']
-            organisation_obj.status = request.POST['status']
-            organisation_obj.membership = request.POST['membership']
-            organisation_obj.date_joined = request.POST['date_joined']
-            organisation_obj.created_by = request.user
-            organisation_obj.save()
-            return redirect('home')
+    for index, mem in enumerate(members):
+        table_body += f'<tr><td>{index + 1}</td>'
 
-    elif request.method == 'GET':
-        form = OrganisationForm()
-        return render(request, 'edit_organisation.html', {'form': form})
+        #if request.user has the right permissions, then show edit option
+        if request.user.has_perm('members.add_member'):
+            name = f'<td><a href="/edit_member/{mem.id}/{mem.slug}/">{mem.short_name}</a></td>'
+        else:
+            name =  f'<td>{mem.short_name}</td>'
 
-def add_port_connection(request):
-    port_connection_obj = PortConnection()
-    if request.method == 'POST':
-        form = PortConnectionForm(request.POST, request.FILES)
-        if form.is_valid():
-            port_connection_obj.member_id = request.POST['member']
-            port_connection_obj.pop_id = request.POST['pop']
-            port_connection_obj.no_of_port = request.POST['no_of_port']
-            port_connection_obj.port_capacity = request.POST['port_capacity']
-            port_connection_obj.created_by = request.user
-            
-            port_connection_obj.save()
-            return redirect('home')
+        table_body += (f'{name}'
+        f'<td>{mem.status}</td>'
+        f'<td>{mem.membership}</td>'
+        f'<td>{mem.date_joined}</td></tr>')
+    
+    table_body += '</table>'
 
-    elif request.method == 'GET':
-        form = PortConnectionForm()
-        return render(request, 'edit_port_connection.html', {'form': form})
-''
+    context = {
+        'html': table_body
+    }
+    return render(request, 'list_members.html', context)
+
+
+def list_pops(request):
+    pops = POP.objects.all().order_by('name')
+
+    table_body = """
+    <table><caption>ALL POPS</caption>
+        <tr>
+            <th>S/NO</th>
+            <th>NAME</th>
+            <th>STATE LOCATED</th>
+            <th>NO OF MEMBERS PRESENT</th>
+        </tr>"""
+
+    for index, pop in enumerate(pops):
+        table_body += f'<tr><td>{index + 1}</td>'
+
+        #if request.user has the right permissions, then show edit option
+        if request.user.has_perm('members.add_pop'):
+            name = f'<td><a href="/edit_pop/{pop.id}/{pop.slug}/">{pop.name}</a></td>'
+        else:
+            name =  f'<td>{pop.name}</td>'
+
+        table_body += (f'{name}'
+        f'<td>{pop.state_located}</td>'
+        f'<td>{PortConnection.objects.all().filter(pop=pop.id).count()}</td></tr>')
+    
+    table_body += '</table>'
+    
+    context = {
+        'html': table_body
+    }
+    return render(request, 'list_pops.html', context)
+

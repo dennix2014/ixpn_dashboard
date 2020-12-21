@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import datetime
+from allauth.account.signals import Signal
+from django.dispatch import receiver
+from django.contrib import messages
 from django.utils.text import slugify
 User = get_user_model()
 from members.all_choices import states_in_nigeria, ports, status, membership
@@ -15,21 +18,6 @@ class Editor(models.Model):
 
     class Meta:
         abstract = True
-
-class Fee(Editor):
-    port_capacity = models.CharField(max_length=10, choices=ports, default='10G')
-    port_fee = models.IntegerField(default=0)
-    membership_fee = models.IntegerField(default=0)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.port_capacity)
-
-        return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.port_capacity + ", " + str(self.charge)
-
 
 
 class POP(Editor):
@@ -47,8 +35,8 @@ class POP(Editor):
         return f'{self.name} {self.state_located}'
 
 
-class Organisation(Editor):
-    name = models.CharField(max_length=100, unique=True)
+class Member(Editor):
+    short_name = models.CharField(max_length=100, unique=True)
     status = models.CharField(max_length=10, choices=status, default='active')
     membership = models.CharField(max_length=20, choices=membership, default='full')
     date_joined = models.DateField(default=timezone.now)
@@ -56,26 +44,28 @@ class Organisation(Editor):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.short_name)
 
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.short_name
 
 
 class PortConnection(Editor):
-    member = models.ForeignKey(Organisation, on_delete=models.CASCADE, default=1, related_name='memcon')
+    member_name = models.ForeignKey(Member, on_delete=models.CASCADE, default=1, related_name='memcon')
     pop = models.ForeignKey(POP, on_delete=models.CASCADE)
     port_capacity = models.CharField(max_length=10, choices=ports)
     no_of_port = models.IntegerField(choices=list(zip(range(1, 16), range(1, 16))))
+    port_fee = models.IntegerField(default=0)
+    membership_fee = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.member.name + "-" + self.pop.name)
+            self.slug = slugify(self.member_name.short_name + "-" + self.pop.name)
 
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.member}, {self.pop}, {self.port_capacity}, {self.no_of_port}'
+        return f'{self.member_name}, {self.pop},'
 

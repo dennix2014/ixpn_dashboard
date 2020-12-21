@@ -1,0 +1,47 @@
+{% extends 'account/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+{% if member_obj %}
+<h1 class="text-center heading1 animated bounceInDown">Edit {{ member_obj }}</h1>
+{% else %}
+<h1 class="text-center heading1 animated bounceInDown">Add Member</h1>
+{% endif %}
+
+<form method="POST">
+{% csrf_token %}
+<div class="form-row justify-content-center">
+    <div class="form-group col-md-4 mr-4 align-center">
+        {{ form.short_name|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-4 mr-4 align-center">
+        {{ form.membership|as_crispy_field }}
+      </div>
+</div>
+<div class="form-row justify-content-center">
+    <div class="form-group col-md-4 mr-4 align-center">
+        {{ form.date_joined|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-4 mr-4 align-center">
+          {{ form.status|as_crispy_field }}
+        </div>
+       
+</div>
+<div class="form-row justify-content-center">
+    <div class="form-group col-md-8 mr-4 align-center">
+        <button type="submit" class="btn btn-block" style="color: whitesmoke; border-radius: 25px; background-color: #2B5928;">Submit</button>
+      
+</div>
+</div>
+</form>
+
+<!-- {% if org %}
+{% if perms.members.add_member %}
+<button class="btn btn-danger confirm-delete" type="button">
+    <a href="{% url 'delete_organisation' org.id org.slug %}">Delete Organisation</a>
+</button>
+{% endif %}
+{% endif %} -->
+
+{% endblock %}

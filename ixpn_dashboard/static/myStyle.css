@@ -17,17 +17,15 @@ body {
 .wrap-every {
   padding-left: 45px;
   margin-bottom: 30px;
-
-
 }
 
+  
+  
 /* Header/logo Title */
 .header {
-  padding: 15px;
-    text-align: center;
-    background:#2B5928;
     color:whitesmoke;
 }
+
 
 
 /* Column container */
@@ -150,9 +148,6 @@ text-align: left;
 padding: 8px;
 }
 
-.filter-form {
-    padding: 50px;
-}
 
 tr:nth-child(even) {
 background-color: #dddddd;
@@ -184,3 +179,157 @@ caption {
   font-weight: 900;
 }
 
+.messages {
+    margin-top: 5%;
+}
+
+.heading1 {
+    color:#2B5928;
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+#filterform label{
+    color:#2B5928;
+    font-weight: 900;
+    
+
+}
+
+#filterform{
+    margin-bottom: 5em;
+    margin-top: 5em;
+}
+
+
+
+  .navbar {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1;
+  }
+
+  a.tt:link, a.tt:visited {
+    background-color: #2B5928;
+    color: whitesmoke;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 10em;
+  }
+  
+  a.tt:hover, a:active {
+    background-color: seagreen;
+    text-decoration: underline;
+  }
+
+  a:hover {
+      background-color: seagreen;
+  }
+  .grid-container2 {
+    display: grid;
+    grid-column-gap: 1em;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    /* grid-gap: 1rem; */
+    /* grid-template-columns: auto auto auto auto auto; */
+    background-color:#2B5928;
+    padding: 1%;
+  }
+  
+  .grid-item2 {
+    background-color: whitesmoke;
+    border: 1px solid black;
+    padding: 10px;
+    display: flex;
+    text-align: center;
+  }
+
+  .hea {
+    background-color: #2B5928;
+    color: whitesmoke;
+    border: 1px solid black;
+    padding: 10px;
+    display: flex;
+    text-align: center;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-column-gap: 2em;
+    /* grid-template-columns: auto auto auto auto; */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 1rem;
+    background-color:#2B5928;
+    padding: 1%;
+  }
+  
+  .grid-item {
+    background-color: whitesmoke;
+    border: 1px solid black;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+
+
+  @media 
+only screen and (max-width: 700px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr, caption { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 1px solid #ccc; }
+	
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+	
+	/*
+	Label the data
+    */
+	td:nth-of-type(1):before { content: "S/NO"; }
+	td:nth-of-type(2):before { content: "Menber"; }
+	td:nth-of-type(3):before { content: "POP"; }
+	td:nth-of-type(4):before { content: "PORT CAPACITY"; }
+	td:nth-of-type(5):before { content: "MEMBERSHIP"; }
+	td:nth-of-type(6):before { content: "STATUS"; }
+	td:nth-of-type(7):before { content: "NO OF PORTS"; }
+	td:nth-of-type(8):before { content: "PORT FEE"; }
+	td:nth-of-type(9):before { content: "MEMBERSHIP FEE"; }
+}
+
+.grid > div:nth-child(10n + 6),
+.grid > div:nth-child(10n + 7),
+.grid > div:nth-child(10n + 8),
+.grid > div:nth-child(10n + 9),
+.grid > div:nth-child(10n + 10) {
+  background:rgba(0,0,0,0.5);
+}

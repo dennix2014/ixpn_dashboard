@@ -4,107 +4,75 @@
 
 
 {% block content %}
-<div class="filter-form">
-<form method="get">
-    <div class="form-row align-items-center">
-        <div class="form-group col-md-3 mb-4 p-4">
+<img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block animated bounceInLeft justify-content-center" alt="IXPN LOGO">
+<h1 class="text-center heading1 animated bounceInDown">IXPN CONNECTION DATABASE</h1>
+
+
+
+   
+        <div class="animated bounceInDown">
+        {% if perms.members.add_portconnection %}
+            <a class="tt" href="{% url 'add_portconnection' %}">Add Port Connection</a>
+        {% endif %}
+        <br><br>
+    </div>
+  
+
+<div class="animated bounceInRight">
+
+    {{ html|safe}}
+    {% if perms.members.add_portconnection %}
+        <a class="tt" href="{% url 'add_portconnection' %}">Add Port Connection</a>
+    {% endif %}
+</div>
+<br><br><br>
+
+<h1 class="text-center heading1 animated bounceInDown">FILTERS</h1>
+
+<div class="container justify-content-center">
+<form method="get" id="filterform" class="animated bounceInUp justify-content-center">
+    <div class="form-row justify-content-center">
+        <div class="form-group col-md-2 m-4 align-center">
             {{ filter.form.pop|as_crispy_field }}
-          </div>
-          <div class="form-group col-md-3 p-4">
-              {{ filter.form.port_capacity|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 m-4 align-center">
+            {{ filter.form.port_capacity|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 date_field m-4 align-center">
+            {{ filter.form.no_of_port|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 date_field m-4 align-center">
+            {{ filter.form.status|as_crispy_field }}
+        </div>    
+    </div>
+
+    <div class="form-row justify-content-center">
+        <div class="form-group col-md-2 m-4 align-center">
+            {{ filter.form.membership|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 m-4 align-center">
+            {{ filter.form.date_joined_min|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 m-4 align-center">
+            {{ filter.form.date_joined_max|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 m-4 align-center">
+            <input type="button" value="Clear Filters" class='reset-button btn btn-outline-success btn-block' onClick="this.form.reset()" />
+        </div>
+    </div>
+        <div class="form-row justify-content-center">
+            <div class="form-group col-md-10 m-4 align-center">
+                <button type="submit" class="btn btn-block" style="background-color: #2B5928; color: whitesmoke; border-radius: 25px;">Submit</button>
             </div>
-            <div class="form-group col-md-3 p-4 date_field">
-                {{ filter.form.no_of_port|as_crispy_field }}
-              </div>
-              <div class="form-group col-md-3 p-4 date_field">
-                {{ filter.form.status|as_crispy_field }}
-              </div>
-              
-              
-           
-    </div>
-    <div class="form-row align-items-center">
-            
-              <div class="form-group col-md-3 p-4">
-                {{ filter.form.membership|as_crispy_field }}
-              </div>
-              <div class="form-group col-md-3 p-4">
-                {{ filter.form.date_joined_min|as_crispy_field }}
-              </div>
-              <div class="form-group col-md-3 p-4">
-                {{ filter.form.date_joined_max|as_crispy_field }}
-              </div>
-              
-              
-
-
-    </div>
-    <input type="submit" />
-    <input type="button" value="Clear Filters" class='reset-button' onClick="this.form.reset()" />
+        </div>
+        
 </form>
 </div>
 
 
-    {{ html|safe}}
 
-<div class="row">
-    <div class="col-md-4">
 
- 
 
-    {% for pop in pops %}
-    <a href="{% url 'edit_pop' pop.id pop.slug %}"><h4>{{ pop.name }}, {{ pop.state_located }}</h4></a>
-    {% endfor %}
-    </div>
+<br><br><br><br>
 
-    <br><br><br>
-
-</div>
-<br><br><br>
-
-<div class="row">
-    <div class="col-md-4">
-
- 
-
-    {% for organisation in organisations %}
-    <a href="{% url 'edit_organisation' organisation.id organisation.slug %}"><h6>{{ organisation.name }}</h6></a>
-    {% endfor %}
-    </div>
-
-    <br><br><br>
-
-</div>
-<br><br><br>
-<div class="row">
-    <div class="col-md-4">
-
- 
-
-    {% for charge in charges %}
-    <a href="{% url 'edit_port_charge' charge.id charge.slug %}"><h6>{{ charge.charge }} - {{ charge.port_capacity }}</h6></a>
-    {% endfor %}
-    </div>
-
-    <br><br><br>
-
-</div>
-    
-<br><br><br>
-
-<a href="{% url 'add_pop' %}">Add POP</a>
-<br><br><br>
-<a href="{% url 'add_port_charge' %}">Add Port Charge</a>
-<br><br><br>
-<a href="{% url 'add_organisation' %}">Add organisation</a>
-<br><br><br>
-<a href="{% url 'add_port_connection' %}">Add Port Connection</a>
-<br><br><br>
-{% for p in pp %}
-{{ p.member }}
-<hr>
-{% endfor %}
-<br><br><br>
-
-   
 {% endblock %}

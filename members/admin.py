@@ -1,13 +1,12 @@
 from django.contrib import admin
-from .models import Organisation, POP, PortConnection, Fee
+from .models import Member, POP, PortConnection
 from core.utils import generate_random_string
 
-class OrganisationAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    prepopulated_fields = {'slug': ('name',)}
+class MemberAdmin(admin.ModelAdmin):
+    list_display = ('short_name',)
+    prepopulated_fields = {'slug': ('short_name',)}
 
 # Register your models here.
-admin.site.register(Organisation, OrganisationAdmin)
+admin.site.register(Member, MemberAdmin)
 admin.site.register(PortConnection)
 admin.site.register(POP)
-admin.site.register(Fee)
