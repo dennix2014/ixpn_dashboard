@@ -13,6 +13,10 @@
 		<link rel="stylesheet" href="{% static 'myStyle.css' %}" />
 		<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
         <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 		<script src="https://use.fontawesome.com/cc5e99677f.js"></script>
 	</head>
@@ -23,12 +27,15 @@
   
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2B5928;">
             <div class="container-fluid">
+                {% if user.is_authenticated %}
             <a class="navbar-brand" href="{% url 'home' %}">IXPN CONNECTION DATABASE</a>
+                {% endif %}
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
           
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% if user.is_authenticated %}
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link active" href="{% url 'list_members'%}">Members</a>
@@ -37,17 +44,21 @@
                   <a class="nav-link active" href="{% url 'list_pops' %}">POPs</a>
                 </li>
               </ul>
+              
               <ul class="navbar-nav ml-auto">
-                  {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <a class="nav-link active" href="/accounts/logout">Logout</a>
-                  </li>
-                  {% else %}
-                  <li class="nav-item">
-                    <a class="nav-link active" href="/accounts/login">Login</a>
-                  </li>
-                  {% endif %}
-              </ul>
+                    <a class="nav-link active" href="{% url 'account_logout' %}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'account_change_password' %}">Change Password</a>
+                </li>
+                {% else %}
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link active" href="{% url 'account_login' %}">Login</a>
+                </li>
+                {% endif %}
+            </ul>
               
             </div>
             </div>
@@ -56,7 +67,7 @@
     <div class="container">
     
     <div class="messages">
-    <div class="animated fadeOut slower delay-5s">
+    <div class="animate__animated animate__zoomOutLeft animate__delay-5s">
         {% if messages %}
         <ul class="messages">
         {% for message in messages %}

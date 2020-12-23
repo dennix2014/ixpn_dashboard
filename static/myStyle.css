@@ -7,19 +7,7 @@ body {
   font-family: Arial;
   margin: 0;
 }
-.form-heading {
-  padding-top: 5px;
-  padding-left: 35px;
-  padding-right: 35px;
-  padding-bottom: 20px;
 
-}
-.wrap-every {
-  padding-left: 45px;
-  margin-bottom: 30px;
-}
-
-  
   
 /* Header/logo Title */
 .header {
@@ -63,79 +51,14 @@ body {
     background: #2B5928;
     color: whitesmoke;
 }
-.row0{
-  flex: 5%;
-  padding: 5px;
-}
 
-.row1{
-  flex: 25%;
-  padding: 5px;
-}
-
-.row2{
-  flex: 30%;
-  padding: 5px;
-}
-.submit-button {
-  padding-top: 20px;
-}
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 700px) {
 .row, .navbar {   
   flex-direction: column;
 }
 }
-.loading {
-  display: none;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50px;
-  width: 50%;
 
-}
-
-.return-home {
-  display: none;
-  margin-left: 5%;
-}
-.return-home-two {
-  display: none;
-  margin-right: 5%;
-  float: right;
-}
-.result {
-  border-radius: 35px;
-    border: 2px solid #2B5928;
-  padding: 20px;
-  margin-bottom: 50px;
-  width: 90%;
-  color: black;
-  font-size: small;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-.contact {
-  border-radius: 35px;
-    border: 2px solid #2B5928;
-    width: auto;
-    height: auto;
-  background-color:#2B5928;
-  padding: 10px;
-  width: 95%;
-  color: white;
-  font-size: small;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-ul {
-  list-style-type: none;
-  line-height: 200%;
-}
-.contact-heading {
-  text-align: center;
-}
-.error {
-  color: red;
-}
 table {
 font-family: arial, sans-serif;
 border-collapse: collapse;
@@ -143,7 +66,7 @@ width: 100%;
 }
 
 td, th {
-border: 1px solid black;
+border: 2px solid black;
 text-align: left;
 padding: 8px;
 }
@@ -152,25 +75,8 @@ padding: 8px;
 tr:nth-child(even) {
 background-color: #dddddd;
 }
-.red {
-  color: red;
-}
-.green {
-  color:#2B5928;
-}
-#los_nei {
-  display: none;
-}
-#ip_add {
-  display: none;
-}
 
-#abj_nei {
-  display: none;
-}
-#los_nei_v6 {
-  display: none;
-}
+
 caption {
   background-color: #2B5928;
   color: whitesmoke;
@@ -179,28 +85,13 @@ caption {
   font-weight: 900;
 }
 
-.messages {
-    margin-top: 5%;
-}
-
-.heading1 {
-    color:#2B5928;
-    margin-top: 1em;
-    margin-bottom: 2em;
-}
 
 #filterform label{
     color:#2B5928;
     font-weight: 900;
-    
-
+    /* margin-bottom: 5em;
+    margin-top: 5em; */
 }
-
-#filterform{
-    margin-bottom: 5em;
-    margin-top: 5em;
-}
-
 
 
   .navbar {
@@ -210,7 +101,7 @@ caption {
       z-index: 1;
   }
 
-  a.tt:link, a.tt:visited {
+  a.link-button:link, a.link-button:visited {
     background-color: #2B5928;
     color: whitesmoke;
     padding: 14px 25px;
@@ -220,7 +111,7 @@ caption {
     border-radius: 10em;
   }
   
-  a.tt:hover, a:active {
+  a.link-button:hover, a:active {
     background-color: seagreen;
     text-decoration: underline;
   }
@@ -228,52 +119,7 @@ caption {
   a:hover {
       background-color: seagreen;
   }
-  .grid-container2 {
-    display: grid;
-    grid-column-gap: 1em;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    /* grid-gap: 1rem; */
-    /* grid-template-columns: auto auto auto auto auto; */
-    background-color:#2B5928;
-    padding: 1%;
-  }
   
-  .grid-item2 {
-    background-color: whitesmoke;
-    border: 1px solid black;
-    padding: 10px;
-    display: flex;
-    text-align: center;
-  }
-
-  .hea {
-    background-color: #2B5928;
-    color: whitesmoke;
-    border: 1px solid black;
-    padding: 10px;
-    display: flex;
-    text-align: center;
-  }
-
-  .grid-container {
-    display: grid;
-    grid-column-gap: 2em;
-    /* grid-template-columns: auto auto auto auto; */
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    grid-gap: 1rem;
-    background-color:#2B5928;
-    padding: 1%;
-  }
-  
-  .grid-item {
-    background-color: whitesmoke;
-    border: 1px solid black;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-  }
-
-
 
   @media 
 only screen and (max-width: 700px),
@@ -291,12 +137,12 @@ only screen and (max-width: 700px),
 		left: -9999px;
 	}
 	
-	tr { border: 1px solid #ccc; }
+	tr { border: 1px solid black; }
 	
 	td { 
 		/* Behave  like a "row" */
 		border: none;
-		border-bottom: 1px solid #eee; 
+		border-bottom: 2px solid black; 
 		position: relative;
 		padding-left: 50%; 
 	}
@@ -325,11 +171,18 @@ only screen and (max-width: 700px),
 	td:nth-of-type(8):before { content: "PORT FEE"; }
 	td:nth-of-type(9):before { content: "MEMBERSHIP FEE"; }
 }
+.submit-button {
+    background-color:  #2B5928;
+    color: whitesmoke;
+    border-radius: 25px;
+}
 
-.grid > div:nth-child(10n + 6),
-.grid > div:nth-child(10n + 7),
-.grid > div:nth-child(10n + 8),
-.grid > div:nth-child(10n + 9),
-.grid > div:nth-child(10n + 10) {
-  background:rgba(0,0,0,0.5);
+.messages {
+    margin-top: 5%;
+}
+
+.heading1 {
+    color:#2B5928;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }

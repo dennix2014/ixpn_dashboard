@@ -31,8 +31,10 @@ def home(request):
             <th>MEMBERSHIP</th>
             <th>STATUS</th>
             <th>NO OF PORTS</th>
-            <th>PORT FEE</th>
-            <th>MEMBERSHIP FEE</th>
+            <th>PORT FEE ( &#x20A6;)</th>
+            <th>MEMBERSHIP FEE( &#x20A6;)</th>
+            <th>DATE CONNECTED</th>
+            
         </tr>"""
 
     for index, port in enumerate(f.qs):
@@ -54,19 +56,20 @@ def home(request):
         """if member is active and a full member, then apply fees. Also count
             total no of ports"""
             
-        if port.member_name.status == 'active' and \
-            port.member_name.membership == 'full':
+        if port.member_name.status == 'Active' and \
+            port.member_name.membership == 'Full':
             table_body += f'<td>{port.port_fee}</td>'
-            table_body += f'<td>{(port.membership_fee):,}</td></tr>'
+            table_body += f'<td>{(port.membership_fee):,}</td>'
 
             total_membership_fee += port.membership_fee
             total_port_fees += port.port_fee
                 
-        elif port.member_name.status == 'inactive' or \
-            port.member_name.membership == 'associate':
-            table_body += f'<td>0</td><td>0</td></tr>'
+        elif port.member_name.status == 'Inactive' or \
+            port.member_name.membership == 'Associate':
+            table_body += f'<td>0</td><td>0</td>'
 
         port_count += port.no_of_port
+        table_body += f'<td>{port.date_connected}</td></tr>'
 
         # Add row for total no of port, total port and membership fee
     table_body += (f'<tr><td><strong>TOTAL</strong></td>'
@@ -77,7 +80,8 @@ def home(request):
                     f'<td> - </td>'
                     f'<td>{port_count}</td>'
                     f'<td>{(total_port_fees):,}</td>'
-                    f'<td>{(total_membership_fee):,}</td></tr>')
+                    f'<td>{(total_membership_fee):,}</td>'
+                    f'<td> - </td></tr>')
       
     table_body += f'</table><br>'
     context = {
@@ -86,6 +90,8 @@ def home(request):
 
     return render(request, 'home.html', context)
 
+    
+@login_required
 def delete_member(request, pk, slug):
     p = Member.objects.get(pk=pk)
     p.delete()
@@ -176,7 +182,7 @@ def add_or_edit_member(request, pk=None, slug=None):
         messages.error(request, permission_denied_msg)
         return redirect('home')
 
-
+@login_required
 def list_members(request):
     members = Member.objects.all().order_by('short_name')
 
@@ -187,7 +193,6 @@ def list_members(request):
             <th>NAME</th>
             <th>STATUS</th>
             <th>MEMBERSHIP</th>
-            <th>DATE JOINED</th>
           
         </tr>"""
 
@@ -202,8 +207,7 @@ def list_members(request):
 
         table_body += (f'{name}'
         f'<td>{mem.status}</td>'
-        f'<td>{mem.membership}</td>'
-        f'<td>{mem.date_joined}</td></tr>')
+        f'<td>{mem.membership}</td>')
     
     table_body += '</table>'
 
@@ -212,7 +216,7 @@ def list_members(request):
     }
     return render(request, 'list_members.html', context)
 
-
+@login_required
 def list_pops(request):
     pops = POP.objects.all().order_by('name')
 

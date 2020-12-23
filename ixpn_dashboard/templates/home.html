@@ -4,25 +4,26 @@
 
 
 {% block content %}
-<img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block animated bounceInLeft justify-content-center" alt="IXPN LOGO">
-<h1 class="text-center heading1 animated bounceInDown">IXPN CONNECTION DATABASE</h1>
+<br><br><br>
+<img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block animate__animated animate__backInRight justify-content-center" alt="IXPN LOGO">
+<h1 class="text-center heading1 animate__animated animate__backInLeft">IXPN CONNECTION DATABASE</h1>
 
 
 
    
-        <div class="animated bounceInDown">
+        <div class="animate__animated animate__backInRight">
         {% if perms.members.add_portconnection %}
-            <a class="tt" href="{% url 'add_portconnection' %}">Add Port Connection</a>
+            <a class="link-button" href="{% url 'add_portconnection' %}">Add Port Connection</a>
         {% endif %}
         <br><br>
     </div>
   
 
-<div class="animated bounceInRight">
+<div class="animate__animated animate__backInLeft">
 
     {{ html|safe}}
     {% if perms.members.add_portconnection %}
-        <a class="tt" href="{% url 'add_portconnection' %}">Add Port Connection</a>
+        <a class="link-button" href="{% url 'add_portconnection' %}">Add Port Connection</a>
     {% endif %}
 </div>
 <br><br><br>
@@ -51,20 +52,23 @@
             {{ filter.form.membership|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.date_joined_min|as_crispy_field }}
+            {{ filter.form.date_connected_min|as_crispy_field }}
         </div>
         <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.date_joined_max|as_crispy_field }}
+            {{ filter.form.date_connected_max|as_crispy_field }}
         </div>
-        <div class="form-group col-md-2 m-4 align-center">
+    </div>
+    <div class="form-row justify-content-center">
+        <div class="form-group col-md-2 m-4 mt-2 align-center">
             <input type="button" value="Clear Filters" class='reset-button btn btn-outline-success btn-block' onClick="this.form.reset()" />
         </div>
     </div>
         <div class="form-row justify-content-center">
             <div class="form-group col-md-10 m-4 align-center">
-                <button type="submit" class="btn btn-block" style="background-color: #2B5928; color: whitesmoke; border-radius: 25px;">Submit</button>
+                <button type="submit" class="btn btn-block submit-button">Submit</button>
             </div>
         </div>
+       
         
 </form>
 </div>

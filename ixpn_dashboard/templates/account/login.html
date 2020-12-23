@@ -3,6 +3,7 @@
 {% block title %}  Sign In {% endblock %}
 
 {% block content %}
+<h1 class="text-center heading1 animated bounceInDown">LOGIN</h1>
  	
 <form class="text-dark" id="login_form" method="POST" action="{% url 'account_login' %}">
     {% csrf_token %}
@@ -19,20 +20,23 @@
         {% endfor %}
     {% endif %}
 
-    <div class="form-row">
-      <div class="form-group col-md-4 mb-0">
+    <div class="form-row justify-content-center">
+      <div class="form-group col-md-4 align-center">
         {{ form.login|as_crispy_field }}
 	  </div>
     </div>
       
-    <div class="form-row">
-      <div class="form-group col-md-4 mb-0">
+    <div class="form-row justify-content-center">
+      <div class="form-group col-md-4 align-center">
         {{ form.password|as_crispy_field }}
 	  </div>
     </div>
-	  <div class="form-row">
-		<div class="form-group col-md-4 mb-0">
-			<button type="submit" class="btn btn-success">Sign in</button>
+	  <div class="form-row justify-content-center">
+		<div class="form-group col-md-4 align-center">
+            {% if request.GET.next %}
+	    	    <input type="hidden" name="next" value="{{ request.GET.next }}">
+	    	{% endif %}
+			<button type="submit" class="btn btn-block align-center" style="background-color: #2B5928; color: whitesmoke; border-radius: 25px;">Sign in</button>
         </div>
         </div>
     

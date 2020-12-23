@@ -53,11 +53,11 @@ ports = [
 ]
 
 status = [
-    ('active', 'active'),
-    ('inactive', 'inactive')
+    ('Active', 'Active'),
+    ('Inactive', 'Inactive')
 ]
 
 membership = [
-    ('full', 'full'),
-    ('associate', 'associate')
+    ('Full', 'Full'),
+    ('Associate', 'Associate')
 ]

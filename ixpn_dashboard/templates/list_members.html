@@ -5,13 +5,13 @@
 
 {% block content %}
 
-
+<br><br><br>
 <img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block" alt="IXPN LOGO">
 <h1 class="text-center heading1 animated bounceInDown">IXPN MEMBERS</h1>
 
 
     {% if perms.members.add_portconnection %}
-        <a class="tt" href="{% url 'add_member' %}">Add Member</a>
+        <a class="link-button" href="{% url 'add_member' %}">Add Member</a>
     {% endif %}
 <br><br>
 
@@ -20,7 +20,9 @@
 
 
 {% if perms.members.add_portconnection %}
-        <a class="tt" href="{% url 'add_member' %}">Add Member</a>
+        <a class="link-button" href="{% url 'add_member' %}">Add Member</a>
     {% endif %}
+
+<br><br><br><br>
 
 {% endblock %}

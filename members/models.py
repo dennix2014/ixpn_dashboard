@@ -37,9 +37,9 @@ class POP(Editor):
 
 class Member(Editor):
     short_name = models.CharField(max_length=100, unique=True)
-    status = models.CharField(max_length=10, choices=status, default='active')
-    membership = models.CharField(max_length=20, choices=membership, default='full')
-    date_joined = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=10, choices=status, default='Active')
+    membership = models.CharField(max_length=20, choices=membership, default='Full')
+    
    
 
     def save(self, *args, **kwargs):
@@ -59,6 +59,8 @@ class PortConnection(Editor):
     no_of_port = models.IntegerField(choices=list(zip(range(1, 16), range(1, 16))))
     port_fee = models.IntegerField(default=0)
     membership_fee = models.IntegerField(default=0)
+    date_connected = models.DateField(default=timezone.now)
+    
 
     def save(self, *args, **kwargs):
         if not self.id:

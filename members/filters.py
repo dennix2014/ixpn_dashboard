@@ -9,11 +9,11 @@ class PortFilter(django_filters.FilterSet):
     membership = django_filters.ChoiceFilter(field_name='member_name', 
         method='filter_membership', label='Membership', choices=membership)
 
-    date_joined_min = django_filters.DateFilter(field_name='member_name.date_joined', 
-        method='filter_date_joined_min', label='Date Joined start')
+    date_connected_min = django_filters.DateFilter(field_name='date_connected', 
+        lookup_expr='gte', label='Date Connected   start')
 
-    date_joined_max = django_filters.DateFilter(field_name='member_name.date_joined', 
-        method='filter_date_joined_max', label='Date Joined end')
+    date_connected_max = django_filters.DateFilter(field_name='date_connected', 
+        lookup_expr='lte', label='Date Connected end')
 
     no_of_port = django_filters.ChoiceFilter(field_name='no_of_port', 
         lookup_expr='gte', label='No of Ports (GTE)', 
@@ -25,12 +25,6 @@ class PortFilter(django_filters.FilterSet):
 
     def filter_membership(self, queryset, name, value):
         return queryset.filter(member_name__membership=value)
-
-    def filter_date_joined_min(self, queryset, name, value):
-        return queryset.filter(member_name__date_joined__gte=value)
-
-    def filter_date_joined_max(self, queryset, name, value):
-        return queryset.filter(member_name__date_joined__lte=value)
 
     class Meta:
         model = PortConnection

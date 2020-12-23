@@ -10,9 +10,9 @@ class PortConnectionForm(ModelForm):
     class Meta:
         model = PortConnection
         fields = ['member_name', 'pop', 'port_capacity', 
-        'no_of_port', 'port_fee', 'membership_fee']
+        'no_of_port', 'port_fee', 'membership_fee', 'date_connected']
 
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['short_name', 'status', 'membership', 'date_joined']
+        fields = ['short_name', 'status', 'membership']
