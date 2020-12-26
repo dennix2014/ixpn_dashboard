@@ -11,6 +11,9 @@ body {
 }
 
   
+.hidden-filter-icon {
+    display: none;
+}
 /* Header/logo Title */
 .header {
     color:whitesmoke;
@@ -36,11 +39,12 @@ body {
 
 div.tty {
     position: sticky;
-    top: 0;;
+    top: 0;
     border: 5px solid #2B5928;
     border-radius: 10px;
     padding-left: 10px;
     padding-right: 10px;
+
 }
 
 /* Main column */
@@ -90,6 +94,16 @@ div.tty {
     padding-right: 20px;
     margin-bottom: 10%;
     
+}
+.hidden-filter-icon {
+
+    display: block;
+    color: #2B5928;
+
+
+}
+.tty {
+    display: none;
 }
 
 }
@@ -159,7 +173,7 @@ caption {
 .submit-button {
     background-color:  #2B5928;
     color: whitesmoke;
-    border-radius: 25px;
+    border-radius: 15px;
 }
 
 .messages {
@@ -192,3 +206,12 @@ input {
     display: none;
 }
 
+
+.filter-icon {
+    color: #2B5928;
+
+}
+
+label.filter-icon {
+    color: #2B5928;
+}

@@ -5,7 +5,6 @@
 
 {% block side %}
 <!-- <div class="container-fluid"> -->
-   
         <div class="tty">
             <h4 class="text-center">Filters</h4>
             <form method="get" action="{% url 'home' %}">
@@ -24,7 +23,12 @@
         
 
 {% block content %}
+
 <div class="container-fluid">
+    <div class="hidden-filter-icon">
+        <label type="button">&nbsp;&nbsp;&nbsp;<i class="fa fa-filter filter-icon fa-3x"></i>filter&nbsp;&nbsp;&nbsp;&nbsp;</label>
+    <br><br>
+    </div>
     <div class="animate__animated animate__backInLeft">
         {{ html|safe}}
     </div>

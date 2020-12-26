@@ -25,3 +25,7 @@ $(document).ready(function() {
  
     });
  });
+
+ $(".hidden-filter-icon").click(function(){
+    $(".tty").toggle();
+  });

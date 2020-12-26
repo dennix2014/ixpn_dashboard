@@ -125,8 +125,12 @@ def add_or_edit_pop(request, pk=None, slug=None):
 @login_required
 def add_or_edit_portconnection(request, pk=None, slug=None):
     if request.user.has_perm('members.add_portconnection'):
-        portconnection_obj = get_object_or_404(PortConnection, pk=pk) if pk else None
-        form = PortConnectionForm(request.POST, request.FILES, instance=portconnection_obj)
+        portconnection_obj = get_object_or_404(PortConnection, 
+                                        pk=pk) if pk else None
+
+        form = PortConnectionForm(request.POST, request.FILES, 
+                                instance=portconnection_obj)
+
         if request.method == 'POST':
             if form.is_valid():
                 obj = form.save(commit=False)
@@ -137,7 +141,8 @@ def add_or_edit_portconnection(request, pk=None, slug=None):
             else:
                 form = PortConnectionForm(instance=portconnection_obj)
                 messages.error(request, 'Correct errors indicated and try again')
-                return render(request, 'add_or_edit_portconnection.html', {'form': form})
+                return render(request, 'add_or_edit_portconnection.html', 
+                                                            {'form': form})
 
         elif request.method == 'GET':
             form = PortConnectionForm(instance=portconnection_obj)
@@ -166,7 +171,7 @@ def add_or_edit_member(request, pk=None, slug=None):
             else:
                 form = MemberForm(instance=member_obj)
                 messages.error(request, 'Correct errors indicated and try again')
-                return render(request, 'organisation.html', {'form': form})
+                return render(request, 'add_or_edit_member.html', {'form': form})
 
         elif request.method == 'GET':
             form = MemberForm(instance=member_obj)
