@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% load static %}
+    {% load static %}
+    {% load crispy_forms_tags %}
 	<head>
         {% if user.is_authenticated %}
         <title>IXPN MEMBERSHIP CONNECTION DATABASE</title>
@@ -43,6 +44,18 @@
                 <li class="nav-item">
                   <a class="nav-link active" href="{% url 'list_pops' %}">POPs</a>
                 </li>
+                {% if perms.add_pop and perms.add_member and perms.add_portconnection%}
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Add
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="{% url 'add_member' %}">Member</a>
+                      <a class="dropdown-item" href="{% url 'add_pop' %}">POP</a>
+                      <a class="dropdown-item" href="{% url 'add_portconnection' %}">Port Connection</a>
+                    </div>
+                  </li>
+                  {% endif %}
               </ul>
               
               <ul class="navbar-nav ml-auto">
@@ -63,34 +76,48 @@
             </div>
             </div>
           </nav>
-    </div>>
-    <div class="container">
-    
-    <div class="messages">
-    <div class="animate__animated animate__zoomOutLeft animate__delay-5s">
-        {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-        <li {% if message.tags %} 
-        class="alert alert-{{ message.tags }}"
-        {% else %}
-        class="alert alert-primary"
-        {% endif %}>
-        <div  role="alert">{{ message }}</div></li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-      </div>
     </div>
+    <div class="messages">
+        <div class="animate__animated animate__zoomOutLeft animate__delay-5s">
+            {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} 
+            class="alert alert-{{ message.tags }}"
+            {% else %}
+            class="alert alert-primary"
+            {% endif %}>
+            <div  role="alert">{{ message }}</div></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if messages %}
+        {% else %}
+        <br><br><br><br>
+        {% endif %}
+        {% if user.is_authenticated %}
+    <img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block" alt="IXPN LOGO">
+<h1 class="text-center heading1 animated bounceInDown">IXPN MEMBERS CONNECTION DATABASE</h1>
+    {% endif %}
+    
      
 
-	<!-- The flexible grid (content) -->
-		<!-- <div class="side">
-		
-		</div> -->
+    <!-- The flexible grid (content) -->
+    <div class="row">
+        {% if filter %}
+		<div class="side">
+            {% block uche %}{% endblock %}
+        </div>
+        {% endif %}
+
+
 		<div class="main">
                 {% block content %}{% endblock %}
-	  	</div>
+          </div>
+    </div>
     
 
 	<!-- Footer -->
@@ -100,7 +127,6 @@
         {% else %}
         <p>© ABC  {% now  "Y" %}</p>
         {% endif %}
-    </div>
     </div>
    
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

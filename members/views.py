@@ -24,16 +24,15 @@ def home(request):
     table_body = """
     <table><caption>ALL PORT CONNECTIONS</caption>
         <tr>
-            <th>S/NO</th>
-            <th>MEMBER</th>
+            <th>S/No</th>
+            <th>Member</th>
             <th>POP</th>
-            <th>PORT CAPACITY</th>
-            <th>MEMBERSHIP</th>
-            <th>STATUS</th>
-            <th>NO OF PORTS</th>
-            <th>PORT FEE ( &#x20A6;)</th>
-            <th>MEMBERSHIP FEE( &#x20A6;)</th>
-            <th>DATE CONNECTED</th>
+            <th>Port Capacity</th>
+            <th>Membership</th>
+            <th>Status</th>
+            <th>No Of Ports</th>
+            <th>Port Fee (&#x20A6;)</th>
+            <th>Membership Fee (&#x20A6;)</th>
             
         </tr>"""
 
@@ -59,17 +58,16 @@ def home(request):
         if port.member_name.status == 'Active' and \
             port.member_name.membership == 'Full':
             table_body += f'<td>{port.port_fee}</td>'
-            table_body += f'<td>{(port.membership_fee):,}</td>'
+            table_body += f'<td>{(port.membership_fee):,}</td></tr>'
 
             total_membership_fee += port.membership_fee
             total_port_fees += port.port_fee
                 
         elif port.member_name.status == 'Inactive' or \
             port.member_name.membership == 'Associate':
-            table_body += f'<td>0</td><td>0</td>'
+            table_body += f'<td>0</td><td>0</td></tr>'
 
         port_count += port.no_of_port
-        table_body += f'<td>{port.date_connected}</td></tr>'
 
         # Add row for total no of port, total port and membership fee
     table_body += (f'<tr><td><strong>TOTAL</strong></td>'
@@ -80,8 +78,7 @@ def home(request):
                     f'<td> - </td>'
                     f'<td>{port_count}</td>'
                     f'<td>{(total_port_fees):,}</td>'
-                    f'<td>{(total_membership_fee):,}</td>'
-                    f'<td> - </td></tr>')
+                    f'<td>{(total_membership_fee):,}</td></tr>')
       
     table_body += f'</table><br>'
     context = {

@@ -3,80 +3,34 @@
 {% load crispy_forms_tags %}
 
 
-{% block content %}
-<br><br><br>
-<img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block animate__animated animate__backInRight justify-content-center" alt="IXPN LOGO">
-<h1 class="text-center heading1 animate__animated animate__backInLeft">IXPN CONNECTION DATABASE</h1>
-
-
-
+{% block uche %}
+<!-- <div class="container-fluid"> -->
    
-        <div class="animate__animated animate__backInRight">
-        {% if perms.members.add_portconnection %}
-            <a class="link-button" href="{% url 'add_portconnection' %}">Add Port Connection</a>
-        {% endif %}
-        <br><br>
-    </div>
-  
-
-<div class="animate__animated animate__backInLeft">
-
-    {{ html|safe}}
-    {% if perms.members.add_portconnection %}
-        <a class="link-button" href="{% url 'add_portconnection' %}">Add Port Connection</a>
-    {% endif %}
-</div>
-<br><br><br>
-
-<h1 class="text-center heading1 animated bounceInDown">FILTERS</h1>
-
-<div class="container justify-content-center">
-<form method="get" id="filterform" class="animated bounceInUp justify-content-center">
-    <div class="form-row justify-content-center">
-        <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.pop|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.port_capacity|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-2 date_field m-4 align-center">
-            {{ filter.form.no_of_port|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-2 date_field m-4 align-center">
-            {{ filter.form.status|as_crispy_field }}
-        </div>    
-    </div>
-
-    <div class="form-row justify-content-center">
-        <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.membership|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.date_connected_min|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-2 m-4 align-center">
-            {{ filter.form.date_connected_max|as_crispy_field }}
-        </div>
-    </div>
-    <div class="form-row justify-content-center">
-        <div class="form-group col-md-2 m-4 mt-2 align-center">
-            <input type="button" value="Clear Filters" class='reset-button btn btn-outline-success btn-block' onClick="this.form.reset()" />
-        </div>
-    </div>
-        <div class="form-row justify-content-center">
-            <div class="form-group col-md-10 m-4 align-center">
-                <button type="submit" class="btn btn-block submit-button">Submit</button>
+        <div class="tty">
+            <h4 class="text-center">Filters</h4>
+            <form method="get" action="{% url 'home' %}">
+            {{ filter.form | crispy }}
+            <div class="form-row">
+                <div class="form-group col-auto">
+                    <button type="button" class="btn btn-block submit-button reset-button">Clear Filters</button>
+                    <button type="submit" id="submit" class="btn btn-block submit-button">Clear Filters</button>
+                </div>
             </div>
+        </form>
         </div>
-       
+    <!-- </div> -->
+
+{% endblock %}
         
-</form>
+
+{% block content %}
+<div class="container-fluid">
+    <div class="animate__animated animate__backInLeft">
+        {{ html|safe}}
+    </div>
+
 </div>
 
 
-
-
-
-<br><br><br><br>
 
 {% endblock %}

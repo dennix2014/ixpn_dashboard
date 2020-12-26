@@ -10,13 +10,13 @@ class PortFilter(django_filters.FilterSet):
         method='filter_membership', label='Membership', choices=membership)
 
     date_connected_min = django_filters.DateFilter(field_name='date_connected', 
-        lookup_expr='gte', label='Date Connected   start')
+        lookup_expr='gte', label='Date start')
 
     date_connected_max = django_filters.DateFilter(field_name='date_connected', 
-        lookup_expr='lte', label='Date Connected end')
+        lookup_expr='lte', label='Date end')
 
     no_of_port = django_filters.ChoiceFilter(field_name='no_of_port', 
-        lookup_expr='gte', label='No of Ports (GTE)', 
+        lookup_expr='gte', label='No of Ports', 
         choices=list(zip(range(1, 16), range(1, 16))))
             
 

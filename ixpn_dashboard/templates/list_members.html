@@ -4,25 +4,9 @@
 
 
 {% block content %}
+<div class="container">
+    {{ html|safe }}
+</div>
 
-<br><br><br>
-<img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block" alt="IXPN LOGO">
-<h1 class="text-center heading1 animated bounceInDown">IXPN MEMBERS</h1>
-
-
-    {% if perms.members.add_portconnection %}
-        <a class="link-button" href="{% url 'add_member' %}">Add Member</a>
-    {% endif %}
-<br><br>
-
-{{ html|safe }}
-<br>
-
-
-{% if perms.members.add_portconnection %}
-        <a class="link-button" href="{% url 'add_member' %}">Add Member</a>
-    {% endif %}
-
-<br><br><br><br>
 
 {% endblock %}
