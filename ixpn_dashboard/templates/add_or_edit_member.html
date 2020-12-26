@@ -4,6 +4,7 @@
 
 {% block content %}
 {% if member_obj %}
+<div class="all-forms">
 <h1 class="text-center heading1 animated bounceInDown">Edit {{ member_obj }}</h1>
 {% else %}
 <h1 class="text-center heading1 animated bounceInDown">Add Member</h1>
@@ -33,7 +34,7 @@
 </div>
 </div>
 </form>
-
+</div>
 <!-- {% if org %}
 {% if perms.members.add_member %}
 <button class="btn btn-danger confirm-delete" type="button">

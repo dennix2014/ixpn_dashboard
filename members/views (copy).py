@@ -22,66 +22,65 @@ def home(request):
     port_count = 0
     
     table_body = """
-    <div class="table-responsive">
-    <table class=""><caption>ALL PORT CONNECTIONS</caption>
-        <tr class="">
-            <th class="hide-on-mobile">S/No</th>
-            <th class="">Member</th>
-            <th class="">POP</th>
-            <th class="hide-on-mobile">Port Capacity</th>
-            <th class="hide-on-mobile">Membership</th>
-            <th class="hide-on-mobile">Status</th>
-            <th class="hide-on-mobile">No Of Ports</th>
-            <th class="">Port Fee (&#x20A6;)</th>
-            <th class="">Membership Fee (&#x20A6;)</th>
+    <table class="t1"><caption>ALL PORT CONNECTIONS</caption>
+        <tr class="t1">
+            <th class="t1">S/No</th>
+            <th class="t1">Member</th>
+            <th class="t1">POP</th>
+            <th class="t1">Port Capacity</th>
+            <th class="t1">Membership</th>
+            <th class="t1">Status</th>
+            <th class="t1">No Of Ports</th>
+            <th class="t1">Port Fee (&#x20A6;)</th>
+            <th class="t1">Membership Fee (&#x20A6;)</th>
             
         </tr>"""
 
     for index, port in enumerate(f.qs):
-        table_body += f'<tr class=""><td class="hide-on-mobile">{index + 1}</td>'
+        table_body += f'<tr class="t1"><td class="t1">{index + 1}</td>'
 
         #if request.user has the right permissions, then show edit option
         if request.user.has_perm('members.add_portconnection'):
-            memb = f'<td class=""><a href="/edit_portconnection/{port.id}/{port.slug}/">{port.member_name}</a></td>'
+            memb = f'<td class="t1"><a href="/edit_portconnection/{port.id}/{port.slug}/">{port.member_name}</a></td>'
         else:
-            memb =  f'<td class="">{port.member_name}</td>'
+            memb =  f'<td class="t1">{port.member_name}</td>'
 
         table_body += (f'{memb}'
-        f'<td class="">{port.pop}</td>'
-        f'<td class="hide-on-mobile">{port.port_capacity}</td>'
-        f'<td class="hide-on-mobile">{port.member_name.membership}</td>'
-        f'<td class="hide-on-mobile">{port.member_name.status}</td>'
-        f'<td class="hide-on-mobile">{port.no_of_port}</td>')
+        f'<td class="t1">{port.pop}</td>'
+        f'<td class="t1">{port.port_capacity}</td>'
+        f'<td class="t1">{port.member_name.membership}</td>'
+        f'<td class="t1">{port.member_name.status}</td>'
+        f'<td class="t1">{port.no_of_port}</td>')
         
         """if member is active and a full member, then apply fees. Also count
             total no of ports"""
             
         if port.member_name.status == 'Active' and \
             port.member_name.membership == 'Full':
-            table_body += f'<td class="">{port.port_fee}</td>'
-            table_body += f'<td class="">{(port.membership_fee):,}</td></tr>'
+            table_body += f'<td class="t1">{port.port_fee}</td>'
+            table_body += f'<td class="t1">{(port.membership_fee):,}</td></tr>'
 
             total_membership_fee += port.membership_fee
             total_port_fees += port.port_fee
                 
         elif port.member_name.status == 'Inactive' or \
             port.member_name.membership == 'Associate':
-            table_body += f'<td class="">0</td><td class="">0</td></tr>'
+            table_body += f'<td class="t1">0</td><td class="t1">0</td></tr>'
 
         port_count += port.no_of_port
 
         # Add row for total no of port, total port and membership fee
-    table_body += (f'<tr class="hide-on-mobile"><td class=""><strong>TOTAL</strong></td>'
-                    f'<td class=""> - </td>'
-                    f'<td class=""> - </td>'
-                    f'<td class="hide-on-mobile"> - </td>'
-                    f'<td class="hide-on-mobile"> - </td>'
-                    f'<td class="hide-on-mobile"> - </td>'
-                    f'<td class="hide-on-mobile">{port_count}</td>'
-                    f'<td class="hide-on-mobile">{(total_port_fees):,}</td>'
-                    f'<td class="hide-on-mobile">{(total_membership_fee):,}</td></tr>')
+    table_body += (f'<tr class="t1"><td class="t1"><strong>TOTAL</strong></td>'
+                    f'<td class="t1"> - </td>'
+                    f'<td class="t1"> - </td>'
+                    f'<td class="t1"> - </td>'
+                    f'<td class="t1"> - </td>'
+                    f'<td class="t1"> - </td>'
+                    f'<td class="t1">{port_count}</td>'
+                    f'<td class="t1">{(total_port_fees):,}</td>'
+                    f'<td class="t1">{(total_membership_fee):,}</td></tr>')
       
-    table_body += f'</table></div><br>'
+    table_body += f'</table><br>'
     context = {
         'html':table_body,
         'filter':f,}
