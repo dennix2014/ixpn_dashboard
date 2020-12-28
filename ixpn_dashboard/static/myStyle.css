@@ -53,6 +53,9 @@ div.tty {
     background-color: white;
 
 }
+.blank {
+    display: none;
+}
 
 .all-forms {
     border: 5px solid #2B5928;
@@ -104,6 +107,10 @@ div.tty {
 }
 .tty {
     display: none;
+}
+
+.blank {
+    display: block;
 }
 
 }
