@@ -11,8 +11,9 @@
             {{ filter.form | crispy }}
             <div class="form-row">
                 <div class="form-group col-auto">
-                    <button type="button" class="btn btn-block submit-button reset-button">Clear Filters</button>
+                    <button type="button" class="submit-button reset-button">Clear Filters</button>
                     <button type="submit" id="submit" class="btn btn-block submit-button">Clear Filters</button>
+                    <input type="hidden" id="Url" data-url="{% url 'home' %}" />
                 </div>
             </div>
         </form>
@@ -26,7 +27,7 @@
 
 <div class="container-fluid">
     <div class="hidden-filter-icon">
-        <label type="button">&nbsp;&nbsp;&nbsp;<i class="fa fa-filter filter-icon fa-3x"></i>filter&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <button class="submit-button" type="button">&nbsp;<i class="fa fa-filter filter-icon fa-2x"></i>filter&nbsp;&nbsp;</button>
     <br><br>
     </div>
     <div class="animate__animated animate__backInLeft">
