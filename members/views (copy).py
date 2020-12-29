@@ -22,7 +22,7 @@ def home(request):
     port_count = 0
     
     table_body = """
-    <table class="t1"><caption>ALL PORT CONNECTIONS</caption>
+    <table class="t1"><caption>ALL PORT CONNECTIONS </caption>
         <tr class="t1">
             <th class="t1">S/No</th>
             <th class="t1">Member</th>

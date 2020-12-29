@@ -235,3 +235,7 @@ button:focus {
     outline: none;
     border-color: whitesmoke;
 }
+
+.dropdown-menu label {
+    display: block;
+  }

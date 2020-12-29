@@ -87,14 +87,14 @@ time = timezone.now()
 date = datetime.date.today()
 
 
-# # Insert into members table
-task = "INSERT INTO members_member (short_name, status, membership, created_by_id, created_on, slug) VALUES (%s, %s, %s, %s, %s, %s)"
-with open('/home/uchechukwu/Documents/projects/ixpn_dashboard/ixpn_dashboard/members.csv') as f:
-    data=[tuple(line) for line in csv.reader(f)]
+# # # Insert into members table
+# task = "INSERT INTO members_member (short_name, status, membership, created_by_id, created_on, slug) VALUES (%s, %s, %s, %s, %s, %s)"
+# with open('/home/uchechukwu/Documents/projects/ixpn_dashboard/ixpn_dashboard/members.csv') as f:
+#     data=[tuple(line) for line in csv.reader(f)]
 
-new_data = [(data[num][0], data[num][1], data[num][2], data[num][3], date, slugify(data[num][0])) for num in range(len(data))]
-cur.executemany(task, new_data)
-db.commit()
+# new_data = [(data[num][0], data[num][1], data[num][2], data[num][3], date, slugify(data[num][0])) for num in range(len(data))]
+# cur.executemany(task, new_data)
+# db.commit()
 
 # Insert into ports table
 # task = "INSERT INTO members_port (port_capacity, no_of_port, created_by_id, member_id, pop_id, created_on, updated_on, slug, billed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -140,3 +140,7 @@ db.commit()
 #           </div>
 #       </div>
 
+
+
+a = 99.5
+print(round(a))

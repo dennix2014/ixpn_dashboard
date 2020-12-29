@@ -17,69 +17,89 @@ def home(request):
 
     ports = PortConnection.objects.all().order_by('member_name__short_name')
     f = PortFilter(request.GET, queryset=ports)
-    total_port_fees = 0
-    total_membership_fee = 0
+    total_port_fees_anum = 0
+  
+    total_membership_fee_anum = 0
+
     port_count = 0
     
     table_body = """
     <div class="table-responsive">
     <table class=""><caption>ALL PORT CONNECTIONS</caption>
         <tr class="">
-            <th class="hide-on-mobile">S/No</th>
-            <th class="">Member</th>
-            <th class="">POP</th>
-            <th class="hide-on-mobile">Port Capacity</th>
-            <th class="hide-on-mobile">Membership</th>
-            <th class="hide-on-mobile">Status</th>
-            <th class="hide-on-mobile">No Of Ports</th>
-            <th class="">Port Fee (&#x20A6;)</th>
-            <th class="">Membership Fee (&#x20A6;)</th>
+            <th class="index">S/No</th>
+            <th class="member">Member</th>
+            <th class="pop">POP</th>
+            <th class="portc">Port Capacity</th>
+            <th class="membership">Membership</th>
+            <th class="status">Status</th>
+            <th class="no_of_ports">No Of Ports</th>
+            <th class="fees_anum">PortFee /Annum (&#x20A6;)</th>
+            <th class="fees_qtr">PortFee /Quater (&#x20A6;)</th>
+            <th class="fees_mon">PortFee /Month (&#x20A6;)</th>
+            <th class="fees_anum">MembershipFee /Annum (&#x20A6;)</th>
+            <th class="fees_qtr">MembershipFee /Quater (&#x20A6;)</th>
+            <th class="fees_mon">MembershipFee /Month (&#x20A6;)</th>
+            <th class="date">Date Connected</th>
             
         </tr>"""
 
     for index, port in enumerate(f.qs):
-        table_body += f'<tr class=""><td class="hide-on-mobile">{index + 1}</td>'
+        table_body += f'<tr class=""><td class="index">{index + 1}</td>'
 
         #if request.user has the right permissions, then show edit option
         if request.user.has_perm('members.add_portconnection'):
-            memb = f'<td class=""><a href="/edit_portconnection/{port.id}/{port.slug}/">{port.member_name}</a></td>'
+            memb = f'<td class="member"><a href="/edit_portconnection/{port.id}/{port.slug}/">{port.member_name}</a></td>'
         else:
-            memb =  f'<td class="">{port.member_name}</td>'
+            memb =  f'<td class="member">{port.member_name}</td>'
 
         table_body += (f'{memb}'
-        f'<td class="">{port.pop}</td>'
-        f'<td class="hide-on-mobile">{port.port_capacity}</td>'
-        f'<td class="hide-on-mobile">{port.member_name.membership}</td>'
-        f'<td class="hide-on-mobile">{port.member_name.status}</td>'
-        f'<td class="hide-on-mobile">{port.no_of_port}</td>')
+        f'<td class="pop">{port.pop}</td>'
+        f'<td class="portc">{port.port_capacity}</td>'
+        f'<td class="membership">{port.member_name.membership}</td>'
+        f'<td class="status">{port.member_name.status}</td>'
+        f'<td class="no_of_ports">{port.no_of_port}</td>')
         
         """if member is active and a full member, then apply fees. Also count
             total no of ports"""
             
         if port.member_name.status == 'Active' and \
             port.member_name.membership == 'Full':
-            table_body += f'<td class="">{port.port_fee}</td>'
-            table_body += f'<td class="">{(port.membership_fee):,}</td></tr>'
+            table_body += f'<td class="fees_anum">{(port.port_fee):,}</td>'
+            table_body += f'<td class="fees_qtr">{round(port.port_fee / 4):,}</td>'
+            table_body += f'<td class="fees_mon">{round(port.port_fee / 12):,}</td>'
+            table_body += f'<td class="fees_anum">{(port.membership_fee):,}</td>'
+            table_body += f'<td class="fees_qtr">{round(port.membership_fee/4):,}</td>'
+            table_body += f'<td class="fees_mon">{round(port.membership_fee/12):,}</td>'
 
-            total_membership_fee += port.membership_fee
-            total_port_fees += port.port_fee
+            total_membership_fee_anum += round(port.membership_fee)
+            total_port_fees_anum += round(port.port_fee)
                 
         elif port.member_name.status == 'Inactive' or \
             port.member_name.membership == 'Associate':
-            table_body += f'<td class="">0</td><td class="">0</td></tr>'
+            table_body += (f'<td class="fees_anum">0</td><td class="fees_qtr">0</td>'
+                            f'<td class="fees_mon">0</td><td class="fees_anum">0</td>'
+                            f'<td class="fees_qtr">0</td><td class="fees_mon">0</td>')
 
         port_count += port.no_of_port
 
+        table_body += f'<td class="date">{port.date_connected}</td></tr>'
+
         # Add row for total no of port, total port and membership fee
-    table_body += (f'<tr class="hide-on-mobile"><td class=""><strong>TOTAL</strong></td>'
-                    f'<td class=""> - </td>'
-                    f'<td class=""> - </td>'
-                    f'<td class="hide-on-mobile"> - </td>'
-                    f'<td class="hide-on-mobile"> - </td>'
-                    f'<td class="hide-on-mobile"> - </td>'
-                    f'<td class="hide-on-mobile">{port_count}</td>'
-                    f'<td class="hide-on-mobile">{(total_port_fees):,}</td>'
-                    f'<td class="hide-on-mobile">{(total_membership_fee):,}</td></tr>')
+    table_body += (f'<tr class=""><td class="index"><strong>TOTAL</strong></td>'
+                    f'<td class="member"> - </td>'
+                    f'<td class="pop"> - </td>'
+                    f'<td class="portc"> - </td>'
+                    f'<td class="membership"> - </td>'
+                    f'<td class="status"> - </td>'
+                    f'<td class="no_of_ports">{port_count}</td>'
+                    f'<td class="fees_anum">{(total_port_fees_anum):,}</td>'
+                    f'<td class="fees_qtr">{round((total_port_fees_anum/4)):,}</td>'
+                    f'<td class="fees_mon">{round((total_port_fees_anum/12)):,}</td>'
+                    f'<td class="fees_anum">{(total_membership_fee_anum):,}</td>'
+                    f'<td class="fees_qtr">{round((total_membership_fee_anum)/4):,}</td>'
+                    f'<td class="fees_mon">{round((total_membership_fee_anum)/12):,}</td>'
+                    f'<td class="date"> - </td></tr>')
       
     table_body += f'</table></div><br>'
     context = {

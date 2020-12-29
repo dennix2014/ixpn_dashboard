@@ -71,3 +71,7 @@ class PortConnection(Editor):
     def __str__(self):
         return f'{self.member_name}, {self.pop},'
 
+# def switch(Editor):
+#     manufacturer = models.CharField(max_length=30)
+#     model = models.CharField(max_length=30)
+#     ports = models.ma
