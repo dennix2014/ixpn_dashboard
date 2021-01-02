@@ -7,7 +7,7 @@
 <!-- <div class="container-fluid"> -->
         <div class="tty">
             <h4 class="text-center">Filters</h4>
-            <form method="get" action="{% url 'home' %}">
+            <form id="filter-form" method="get" action="{% url 'home' %}">
             {{ filter.form | crispy }}
             <div class="form-row">
                 <div class="form-group col-auto">
@@ -32,22 +32,24 @@
     <br><br>
     </div> -->
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn submit-button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Select Colmns
         </button>
         <form class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".index">S/No</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".member">Member</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".pop">POP</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".portc">Port Capacity</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".membership">Membership</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".status">Status</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".no_of_ports">No of Ports</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".fees_anum">Fees/Yr</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".fees_qtr">Fess/Qtr</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".fees_mon">Fees/Month</label>
-          <label class="dropdown-item"><input type="checkbox" class="oggg" name="port_connection_column" value=".date">Date Connected</label>
-          <button type="button" class="submit-cols" >submit</button>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="index" value=".index">&nbsp;&nbsp;S/No</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="member" value=".member">&nbsp;&nbsp;Member</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="pop" value=".pop">&nbsp;&nbsp;POP</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="portc" value=".portc">&nbsp;&nbsp;Port Capacity</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="membership" value=".membership">&nbsp;&nbsp;Membership</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="status" value=".status">&nbsp;&nbsp;Status</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="no_of_ports" value=".no_of_ports">&nbsp;&nbsp;No of Ports</label>
+          <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="date" value=".date">&nbsp;&nbsp;Date Connected</label>
+          <h5 class="dropdown-header"><strong>Fees (Select only one)</strong></h5>
+          <label class="dropdown-item"><input type="radio" class="columns" name="port_connection_column" id="fees_anum" value=".fees_anum">&nbsp;&nbsp;Fees per annum</label>
+          <label class="dropdown-item"><input type="radio" class="columns" name="port_connection_column" id="fees_qtr" value=".fees_qtr">&nbsp;&nbsp;Fess Per Quater</label>
+          <label class="dropdown-item"><input type="radio" class="columns" name="port_connection_column" id="fees_mon" value=".fees_mon">&nbsp;&nbsp;Fees Per Month</label>
+         
+          <button type="button" class="submit-cols submit-button" >Apply</button>
         </form>
       </div>
     <div class="animate__animated animate__backInLeft">

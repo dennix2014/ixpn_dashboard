@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Member, POP, PortConnection
+from .models import Member, POP, PortConnection, Switch, SwitchPort, Aka
 from core.utils import generate_random_string
 
 class MemberAdmin(admin.ModelAdmin):
@@ -10,3 +10,6 @@ class MemberAdmin(admin.ModelAdmin):
 admin.site.register(Member, MemberAdmin)
 admin.site.register(PortConnection)
 admin.site.register(POP)
+admin.site.register(SwitchPort)
+admin.site.register(Switch)
+admin.site.register(Aka)

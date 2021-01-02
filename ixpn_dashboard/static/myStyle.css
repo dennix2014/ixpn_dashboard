@@ -238,4 +238,9 @@ button:focus {
 
 .dropdown-menu label {
     display: block;
+    font-size: small;
   }
+
+  #id_pot option[disabled] {
+    display: none;
+}

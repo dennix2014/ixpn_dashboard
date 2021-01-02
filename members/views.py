@@ -2,13 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils import timezone
 import uuid
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .models import PortConnection, POP, Member
+from .models import PortConnection, POP, Member, SwitchPort, Switch, Aka
 from .filters import PortFilter
-from .forms import MemberForm, POPForm, PortConnectionForm
+from .forms import MemberForm, POPForm, PortConnectionForm, AkaForm, SwitchPortForm, SwitchForm
 permission_denied_msg = """
 Permission denied. Please contact app admin if you feel this is a mistake"""
 
@@ -25,7 +25,7 @@ def home(request):
     
     table_body = """
     <div class="table-responsive">
-    <table class=""><caption>ALL PORT CONNECTIONS</caption>
+    <table class=""><caption>ALL PORT CONNECTIONS </caption>
         <tr class="">
             <th class="index">S/No</th>
             <th class="member">Member</th>
@@ -34,12 +34,12 @@ def home(request):
             <th class="membership">Membership</th>
             <th class="status">Status</th>
             <th class="no_of_ports">No Of Ports</th>
-            <th class="fees_anum">PortFee /Annum (&#x20A6;)</th>
-            <th class="fees_qtr">PortFee /Quater (&#x20A6;)</th>
-            <th class="fees_mon">PortFee /Month (&#x20A6;)</th>
-            <th class="fees_anum">MembershipFee /Annum (&#x20A6;)</th>
-            <th class="fees_qtr">MembershipFee /Quater (&#x20A6;)</th>
-            <th class="fees_mon">MembershipFee /Month (&#x20A6;)</th>
+            <th class="fees_anum">Annual PortFee (&#x20A6;)</th>
+            <th class="fees_qtr">Quaterly PortFee (&#x20A6;)</th>
+            <th class="fees_mon">Monthly PortFee (&#x20A6;)</th>
+            <th class="fees_anum">Annual MembershipFee (&#x20A6;)</th>
+            <th class="fees_qtr">Quaterly MembershipFee (&#x20A6;)</th>
+            <th class="fees_mon">Monthly MembershipFee (&#x20A6;)</th>
             <th class="date">Date Connected</th>
             
         </tr>"""
@@ -272,3 +272,107 @@ def list_pops(request):
     }
     return render(request, 'list_pops.html', context)
 
+@login_required
+def add_or_edit_switch(request, pk=None, slug=None):
+    if request.user.has_perm('members.add_member'):
+        switch_obj = get_object_or_404(Switch, pk=pk) if pk else None
+        form = SwitchForm(request.POST, request.FILES, 
+                                instance=switch_obj)
+
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.created_by = request.user
+                messages.success(request, f'{obj} saved successfully')
+                obj.save()
+                return redirect('home')
+            else:
+                form = SwitchForm(instance=switch_obj)
+                messages.error(request, 'Correct errors indicated and try again')
+                return render(request, 'add_or_edit_switch.html', {'form': form})
+
+        elif request.method == 'GET':
+            form = SwitchForm(instance=switch_obj)
+            context = {
+                'form': form,
+                'switch_obj': switch_obj,
+            }
+            return render(request, 'add_or_edit_switch.html', context)
+
+    else:
+        messages.error(request, permission_denied_msg)
+        return redirect('home')
+
+
+@login_required
+def add_or_edit_switchport(request, pk=None, slug=None):
+    if request.user.has_perm('members.add_member'):
+        switchport_obj = get_object_or_404(SwitchPort, pk=pk) if pk else None
+        form = SwitchPortForm(request.POST, request.FILES, 
+                                instance=switchport_obj)
+
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.created_by = request.user
+                messages.success(request, f'{obj} saved successfully')
+                obj.save()
+                return redirect('home')
+            else:
+                form = SwitchPortForm(instance=switchport_obj)
+                messages.error(request, 'Correct errors indicated and try again')
+                return render(request, 'add_or_edit_switchport.html', {'form': form})
+
+        elif request.method == 'GET':
+            form = SwitchPortForm(instance=switchport_obj)
+            context = {
+                'form': form,
+                'switchport_obj': switchport_obj,
+            }
+            return render(request, 'add_or_edit_switchport.html', context)
+
+    else:
+        messages.error(request, permission_denied_msg)
+        return redirect('home')
+
+@login_required
+def add_or_edit_aka(request, pk=None, slug=None):
+    if request.user.has_perm('members.add_member'):
+        aka_obj = get_object_or_404(Aka, pk=pk) if pk else None
+        form = AkaForm(request.POST, request.FILES, 
+                                instance=aka_obj)
+
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.created_by = request.user
+                messages.success(request, f'{obj} saved successfully')
+                obj.save()
+                return redirect('home')
+            else:
+                messages.error(request, 'Correct errors indicated and try again')
+                return render(request, 'add_or_edit_aka.html', {'form': form,})
+
+        elif request.method == 'GET':
+            form = AkaForm(instance=aka_obj)
+            context = {
+                'form': form,
+                'aka_obj': aka_obj,
+            }
+            return render(request, 'add_or_edit_aka.html', context)
+
+    else:
+        messages.error(request, permission_denied_msg)
+        return redirect('home')
+
+
+def ajax_load_ports(request):
+    switch_id = request.GET.get('switch')
+    ports = SwitchPort.objects.filter(switch_id=switch_id).exclude(id__in=Aka.objects.filter(switch_id = switch_id).values('pot_id'))
+    html = '<option value="">---------</option>'
+    for port in ports:
+        html += f'<option value="{port.id}">{port.name}</option>'
+    response = {'result':html}
+        
+    return JsonResponse(response) 
+    

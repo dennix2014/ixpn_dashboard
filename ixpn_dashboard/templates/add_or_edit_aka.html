@@ -1,0 +1,46 @@
+{% extends 'account/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+{% if switch_obj %}
+<h1 class="text-center heading1 animated bounceInDown">Edit {{ port_obj }}</h1>
+{% else %}
+<h1 class="text-center heading1 animated bounceInDown">Add port connection</h1>
+{% endif %}
+<form method="POST" id="akaForn">
+    {% csrf_token %}
+    <input type="hidden" id="Urll" data-ports-url="{% url 'ajax_load_ports' %}" />
+    <div class="form-row justify-content-center">
+        <div class="form-group col-md-4 mr-4 align-center">
+            {{ form.memname|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row justify-content-center">
+        <div class="form-group col-md-4 mr-4 align-center">
+            {{ form.switch|as_crispy_field }}
+        </div>
+    </div>
+    <div class="form-row justify-content-center">
+    <div class="form-group col-md-4 mr-4 align-center">
+        {{ form.pot|as_crispy_field }}
+        <spam id="optionHolder"></spam>
+    </div>
+    </div>
+       
+   <div class="form-row justify-content-center ">
+    <div class="col-md-8">
+        <button type="submit" class="btn btn-block submit-button">Save Changes</button>
+      </div>
+   </div>
+
+      
+    </form>
+    <br><br>
+    
+<div id="id_pott">
+  
+</div>
+
+{% endblock %}

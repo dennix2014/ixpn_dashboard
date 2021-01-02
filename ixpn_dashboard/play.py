@@ -97,7 +97,7 @@ date = datetime.date.today()
 # db.commit()
 
 # Insert into ports table
-# task = "INSERT INTO members_port (port_capacity, no_of_port, created_by_id, member_id, pop_id, created_on, updated_on, slug, billed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+# task = "INSERT INTO members_port (port_capapot, no_of_port, created_by_id, member_id, pop_id, created_on, updated_on, slug, billed) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 # with open('/home/uchechukwu/Documents/projects/ixpn_dashboard/ixpn_dashboard/ports.csv') as f:
 #     data=[tuple(line) for line in csv.reader(f)]
 
@@ -116,7 +116,7 @@ date = datetime.date.today()
 #               {{ filter.form.pop|as_crispy_field }}
 #             </div>
 #             <div class="form-group col-md-4 mb-0">
-#                 {{ filter.form.port_capacity|as_crispy_field }}
+#                 {{ filter.form.port_capapot|as_crispy_field }}
 #               </div>
 #               <div class="form-group col-md-4 mb-0">
 #                 {{ filter.form.no_of_port|as_crispy_field }}
@@ -125,7 +125,7 @@ date = datetime.date.today()
 #         <input type="submit" />
 #     </form>
 #     {% for obj in filter.qs %}
-#     {{ obj.member}} - {{ obj.pop }} - {{ obj.no_of_port }} - {{ obj.port_capacity}}<br />
+#     {{ obj.member}} - {{ obj.pop }} - {{ obj.no_of_port }} - {{ obj.port_capapot}}<br />
 #     {% endfor %}
 #     <br><br><br>
 
@@ -133,7 +133,7 @@ date = datetime.date.today()
 #           {{ filter.form.pop|as_crispy_field }}
 #         </div>
 #         <div class="form-group col-md-4 mb-0">
-#             {{ filter.form.port_capacity|as_crispy_field }}
+#             {{ filter.form.port_capapot|as_crispy_field }}
 #           </div>
 #           <div class="form-group col-md-4 mb-0">
 #             {{ filter.form.no_of_port__gt|as_crispy_field }}
@@ -144,3 +144,37 @@ date = datetime.date.today()
 
 a = 99.5
 print(round(a))
+
+a = SwitchPort.objects.filter(switch__pk = 1)
+b = Aka.objects.filter(switch__pk = 1 )
+
+
+select 
+
+select port_id from members_switchport where switch_id = 1 full join members_aka on switch_id = 1 whe
+
+
+
+SELECT pot_id
+FROM
+    members_switchport
+    LEFT JOIN members_aka
+        ON switch_id = 1;
+
+    
+
+SELECT name
+FROM members_switchport
+WHERE members_switchport.switch_id = 1 and members_switchport.id not in (select members_aka.pot_id from members_aka where members_aka.switch_id = 1)
+
+b = Aka.objects.filter(switch_id = 1).values('pot_id')
+a = SwitchPort.objects.filter(switch_id=1).exclude(id__in=Aka.objects.filter(switch_id = 1).values('pot_id'))
+
+if 'switch' in self.data:
+    try:
+        switch_id = int(self.data.get('switch'))
+        self.fields['pot'].queryset = Aka.objects.filter(switch_id=switch_id)
+    except (ValueError, TypeError):
+        pass  # invalid input from the client; ignore and fallback to empty pot queryset
+elif self.instance.pk:
+            self.fields['pot'].queryset = self.instance.switch.pot_set

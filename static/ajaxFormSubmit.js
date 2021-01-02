@@ -1,12 +1,8 @@
-$(document).ready(function() {
-    $('.dateinput').attr('type', 'date');      
-});
-
 $('.reset-button').on('click', function(){
     $("select").each(function() { this.selectedIndex = 0 });
     $(".numberinput").val("");
     $(".dateinput").val("");
-    let url = $("#Url").attr("data-url");
+    var url = $("#Url").attr("data-url");
     window.location.href = url;
 });
 
@@ -15,76 +11,96 @@ $(document).on('click', '.confirm-delete', function(){
 })
 
 
-$(document).ready(function() {
-    $('form select').on('change', function() {
-      $('#submitFilter').click();
- 
-    });
- });
-
- $(document).ready(function() {
-    $('form input').on('change', function() {
-      $('#submitFilter').click();
- 
-    });
- });
-
  $(".hidden-filter-icon").click(function(){
     $(".tty").toggle();
   });
 
 
-  var expanded = false;
-
-  function showCheckboxes() {
-    var checkboxes = document.getElementById("checkboxes");
-    if (!expanded) {
-      checkboxes.style.display = "block";
-      expanded = true;
-    } else {
-      checkboxes.style.display = "none";
-      expanded = false;
-    }
-  }
-$(document).ready(function () {
-    let classes = ['.index', '.member', '.pop', '.portc', '.membership', '.status',
+var classez = ['.index', '.member', '.pop', '.portc', '.membership', '.status',
                     '.no_of_ports', '.fees_anum', '.fees_qtr', '.fees_mon', '.date']
-    $(".submit-cols").click(function(){
-        $("#dropdownMenuButton").click();
-        $('.index').hide();
-        for (i = 0; i < classes.length; i++) {
-            $(classes[i]).hide();
-          }
-    var selectedLanguage = new Array();
-    $('input[name="port_connection_column"]:checked').each(function() {
-    selectedLanguage.push(this.value);
-    for (j = 0; j < selectedLanguage.length; j++) {
-        $(selectedLanguage[j]).show();
-    }
-    
-    });
-    });
-    });
+var mobile_screen_size = ['.member', '.pop', '.fees_anum', ];
+var normal_screen_size = ['.index', '.member', '.pop', '.portc', '.membership', '.no_of_ports', '.fees_anum', ]
+var isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
 
-
-    var checks = document.querySelectorAll(".oggg");
-    var max = 7;
-    for (var i = 0; i < checks.length; i++)
-      checks[i].onclick = selectiveCheck;
-    function selectiveCheck (event) {
-      var checkedChecks = document.querySelectorAll(".oggg:checked");
-      if (checkedChecks.length >= max + 1) {
-        alert('you can only select 7 columns at a time')
-        return false;   
+function resetColumns() {
+    for (i = 0; i < classez.length; i++) {
+        $(classez[i]).hide();
       }
-      
-    }
+};
+$(document).ready(function () {
+    resetColumns();
+    $('#id_pot option').prop('disabled', true);
+    $('.dateinput').attr('type', 'date');
 
-
-$(function() {      
-    let isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+    $('#filter-form select, #filter-form input').on('change', function() {
+        $('#submitFilter').click();
+      });
 
     if (isMobile) {
-        alert('mobile')
+        for (i = 0; i < mobile_screen_size.length; i++) {
+            $(mobile_screen_size[i]).show();
+            var id = '#' + mobile_screen_size[i].substring(1);
+            $(id).prop('checked', true).change();
+          }
+    }else {
+        for (i = 0; i < normal_screen_size.length; i++) {
+            $(normal_screen_size[i]).show();
+            var id = '#' + normal_screen_size[i].substring(1);
+            $(id).prop('checked', true).change();
+          }
     }
+    
+    $(".submit-cols").click(function(){
+        $("#dropdownMenuButton").click();
+        resetColumns()
+        
+        var selectedColumn = new Array();
+        $('input[name="port_connection_column"]:checked').each(function() {
+        selectedColumn.push(this.value);
+        for (j = 0; j < selectedColumn.length; j++) {
+            $(selectedColumn[j]).show();
+        }
+    
+        });
+    });
 });
+
+
+var checks = document.querySelectorAll(".columns");
+
+var max;
+if (isMobile) {
+    max = 4
+}else {
+    max = 8
+}
+
+for (var i = 0; i < checks.length; i++)
+  checks[i].onclick = selectiveCheck;
+function selectiveCheck (event) {
+  var checkedChecks = document.querySelectorAll(".columns:checked");
+  if (checkedChecks.length >= max + 1) {
+    alert(`You can only select ${max} columns at a time`)
+    return false;   
+  }
+  
+};
+
+
+$("#id_switch").on('change', function () {
+    var urll = $("#Urll").attr("data-ports-url");
+    var switchId = $(this).val();
+    console.log(urll)
+    console.log(switchId)
+
+    $.ajax({ 
+      url: urll,
+      data: {
+        'switch': switchId
+      },
+      success: function (data) { 
+        $("#id_pot").html(data.result);
+      }
+    });
+
+  });

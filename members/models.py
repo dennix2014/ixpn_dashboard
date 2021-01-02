@@ -71,7 +71,50 @@ class PortConnection(Editor):
     def __str__(self):
         return f'{self.member_name}, {self.pop},'
 
-# def switch(Editor):
-#     manufacturer = models.CharField(max_length=30)
-#     model = models.CharField(max_length=30)
-#     ports = models.ma
+class Switch(Editor):
+    manufacturer = models.CharField(max_length=30)
+    model = models.CharField(max_length=30)
+    serial_no = models.CharField(max_length=30)
+
+
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.model + "-" + self.serial_no)
+
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.manufacturer}, {self.serial_no}'
+
+class SwitchPort(Editor):
+    name = models.CharField(max_length=20)
+    int_type = models.CharField(max_length=30, default='Ethernet')
+    switch = models.ForeignKey(Switch, on_delete=models.CASCADE, null=True, blank=True, related_name='swichy')
+
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.name)
+
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.int_type}, {self.name},'
+
+class Aka(Editor):
+    memname = models.ForeignKey(Member, on_delete=models.CASCADE, default=1, related_name='memname')
+    switch = models.ForeignKey(Switch, on_delete=models.CASCADE)
+    pot = models.ForeignKey(SwitchPort, on_delete=models.CASCADE, default=None)
+
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.memname)
+
+        return super().save(*args, **kwargs)
+
+    
+
+    def __str__(self):
+        return f'{self.memname}, {self.switch},'

@@ -31,7 +31,29 @@ urlpatterns = [
     path('list_members/', 
         views.list_members, name='list_members'),
 
-     path('list_pops/', 
+    path('list_pops/', 
         views.list_pops, name='list_pops'),
+
+
+    path('edit_switch/<int:pk>/<slug:slug>/', 
+        views.add_or_edit_switch, name='edit_switch'),
+
+    path('add_switch/', 
+        views.add_or_edit_switch, name='add_switch'),
+
+    path('edit_switchport/<int:pk>/<slug:slug>/', 
+        views.add_or_edit_switchport, name='edit_switchport'),
+
+    path('add_switchport/', 
+        views.add_or_edit_switchport, name='add_switchport'),
+
+    path('edit_aka/<int:pk>/<slug:slug>/', 
+        views.add_or_edit_aka, name='edit_aka'),
+
+    path('add_aka/', 
+        views.add_or_edit_aka, name='add_aka'),
+
+    path('ajax/load-ports/', views.ajax_load_ports, name='ajax_load_ports')
+
     
 ]
