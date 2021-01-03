@@ -61,3 +61,8 @@ membership = [
     ('Full', 'Full'),
     ('Associate', 'Associate')
 ]
+
+media = [
+    ('Fiber', 'Fiber'),
+    ('Copper', 'Copper')
+]

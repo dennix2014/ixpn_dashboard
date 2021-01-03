@@ -241,6 +241,6 @@ button:focus {
     font-size: small;
   }
 
-  #id_pot option[disabled] {
+  #id_switch_port option[disabled] {
     display: none;
 }

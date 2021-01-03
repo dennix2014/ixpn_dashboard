@@ -14,23 +14,24 @@ class PortFilter(django_filters.FilterSet):
 
     date_connected_max = django_filters.DateFilter(field_name='date_connected', 
         lookup_expr='lte', label='Date end')
-
-    no_of_port = django_filters.ChoiceFilter(field_name='no_of_port', 
-        lookup_expr='gte', label='No of Ports', 
-        choices=list(zip(range(1, 16), range(1, 16))))
-            
-
+         
     def filter_status(self, queryset, name, value):
         return queryset.filter(member_name__status=value)
 
     def filter_membership(self, queryset, name, value):
         return queryset.filter(member_name__membership=value)
 
+    def filter_pop(self, queryset, name, value):
+        return queryset.filter(switch__pop=value)
+
+
     class Meta:
         model = PortConnection
         fields = {
-            'pop': ['exact',],
-            'port_capacity': ['exact',]
+            'port_capacity': ['exact',],
+            'switch': ['exact'],
+            'member_name': ['exact']
+        
         }
       
 

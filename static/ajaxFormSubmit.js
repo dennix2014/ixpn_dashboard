@@ -17,9 +17,10 @@ $(document).on('click', '.confirm-delete', function(){
 
 
 var classez = ['.index', '.member', '.pop', '.portc', '.membership', '.status',
-                    '.no_of_ports', '.fees_anum', '.fees_qtr', '.fees_mon', '.date']
+                    '.switch', '.switch_port', '.fees_anum', '.fees_qtr', '.fees_mon', '.date']
 var mobile_screen_size = ['.member', '.pop', '.fees_anum', ];
-var normal_screen_size = ['.index', '.member', '.pop', '.portc', '.membership', '.no_of_ports', '.fees_anum', ]
+var normal_screen_size = ['.index', '.member', '.pop', '.portc', '.membership', '.fees_anum', '.date' ]
+
 var isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
 
 function resetColumns() {
@@ -29,7 +30,7 @@ function resetColumns() {
 };
 $(document).ready(function () {
     resetColumns();
-    $('#id_pot option').prop('disabled', true);
+    $('#id_switch_port option').prop('disabled', true);
     $('.dateinput').attr('type', 'date');
 
     $('#filter-form select, #filter-form input').on('change', function() {
@@ -87,7 +88,8 @@ function selectiveCheck (event) {
 };
 
 
-$("#id_switch").on('change', function () {
+
+$("#id_switch").on('change mouseenter click', function () {
     var urll = $("#Urll").attr("data-ports-url");
     var switchId = $(this).val();
     console.log(urll)
@@ -99,7 +101,7 @@ $("#id_switch").on('change', function () {
         'switch': switchId
       },
       success: function (data) { 
-        $("#id_pot").html(data.result);
+        $("#id_switch_port").html(data.result);
       }
     });
 

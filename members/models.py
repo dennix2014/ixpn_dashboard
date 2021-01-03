@@ -7,7 +7,8 @@ from django.dispatch import receiver
 from django.contrib import messages
 from django.utils.text import slugify
 User = get_user_model()
-from members.all_choices import states_in_nigeria, ports, status, membership
+from members.all_choices import (states_in_nigeria, ports, 
+status, membership, media)
 
 
 
@@ -52,11 +53,46 @@ class Member(Editor):
         return self.short_name
 
 
+
+
+class Switch(Editor):
+    name = models.CharField(max_length=30)
+    oem = models.CharField(max_length=30)
+    model = models.CharField(max_length=30)
+    serial_no = models.CharField(max_length=30)
+    pop = models.ForeignKey(POP, on_delete=models.CASCADE)
+    ipv4_address = models.GenericIPAddressField()
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.name + "-" + self.serial_no)
+
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.name}, {self.pop}'
+
+class SwitchPort(Editor):
+    name = models.CharField(max_length=20)
+    int_type = models.CharField(max_length=30, default='Ethernet')
+    media = models.CharField(max_length=15, choices=media)
+    switch = models.ForeignKey(Switch, on_delete=models.CASCADE, null=True, blank=True, related_name='swichy')
+
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.name + '-' + self.switch)
+
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.int_type}, {self.name},'
+
 class PortConnection(Editor):
     member_name = models.ForeignKey(Member, on_delete=models.CASCADE, default=1, related_name='memcon')
-    pop = models.ForeignKey(POP, on_delete=models.CASCADE)
     port_capacity = models.CharField(max_length=10, choices=ports)
-    no_of_port = models.IntegerField(choices=list(zip(range(1, 16), range(1, 16))))
+    switch = models.ForeignKey(Switch, on_delete=models.CASCADE)
+    switch_port = models.ForeignKey(SwitchPort, on_delete=models.CASCADE)
     port_fee = models.IntegerField(default=0)
     membership_fee = models.IntegerField(default=0)
     date_connected = models.DateField(default=timezone.now)
@@ -64,57 +100,9 @@ class PortConnection(Editor):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.member_name.short_name + "-" + self.pop.name)
+            self.slug = slugify(self.member_name.short_name + "-" + self.switch.pop.name)
 
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.member_name}, {self.pop},'
-
-class Switch(Editor):
-    manufacturer = models.CharField(max_length=30)
-    model = models.CharField(max_length=30)
-    serial_no = models.CharField(max_length=30)
-
-
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.model + "-" + self.serial_no)
-
-        return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f'{self.manufacturer}, {self.serial_no}'
-
-class SwitchPort(Editor):
-    name = models.CharField(max_length=20)
-    int_type = models.CharField(max_length=30, default='Ethernet')
-    switch = models.ForeignKey(Switch, on_delete=models.CASCADE, null=True, blank=True, related_name='swichy')
-
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.name)
-
-        return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f'{self.int_type}, {self.name},'
-
-class Aka(Editor):
-    memname = models.ForeignKey(Member, on_delete=models.CASCADE, default=1, related_name='memname')
-    switch = models.ForeignKey(Switch, on_delete=models.CASCADE)
-    pot = models.ForeignKey(SwitchPort, on_delete=models.CASCADE, default=None)
-
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.memname)
-
-        return super().save(*args, **kwargs)
-
-    
-
-    def __str__(self):
-        return f'{self.memname}, {self.switch},'
+        return f'{self.member_name}, {self.switch.pop},'

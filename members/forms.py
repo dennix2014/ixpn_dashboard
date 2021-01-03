@@ -1,5 +1,5 @@
 from django import forms
-from .models import POP, PortConnection, Member, Switch, SwitchPort, Aka
+from .models import POP, PortConnection, Member, Switch, SwitchPort
 
 class POPForm(forms.ModelForm):
     class Meta:
@@ -9,8 +9,8 @@ class POPForm(forms.ModelForm):
 class PortConnectionForm(forms.ModelForm):
     class Meta:
         model = PortConnection
-        fields = ['member_name', 'pop', 'port_capacity', 
-        'no_of_port', 'port_fee', 'membership_fee', 'date_connected']
+        fields = ['member_name', 'port_capacity', 'switch', 'switch_port',
+        'port_fee', 'membership_fee', 'date_connected']
 
 class MemberForm(forms.ModelForm):
     class Meta:
@@ -21,14 +21,10 @@ class MemberForm(forms.ModelForm):
 class SwitchPortForm(forms.ModelForm):
     class Meta:
         model = SwitchPort
-        fields = ['name', 'switch', 'int_type']
+        fields = ['name', 'switch', 'int_type', 'media']
 
 class SwitchForm(forms.ModelForm):
     class Meta:
         model = Switch
-        fields = ['manufacturer', 'model', 'serial_no']
+        fields = ['name', 'oem', 'model', 'serial_no', 'pop', 'ipv4_address']
 
-class AkaForm(forms.ModelForm):
-    class Meta:
-        model = Aka
-        fields = ['memname', 'switch', 'pot']

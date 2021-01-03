@@ -47,12 +47,6 @@ urlpatterns = [
     path('add_switchport/', 
         views.add_or_edit_switchport, name='add_switchport'),
 
-    path('edit_aka/<int:pk>/<slug:slug>/', 
-        views.add_or_edit_aka, name='edit_aka'),
-
-    path('add_aka/', 
-        views.add_or_edit_aka, name='add_aka'),
-
     path('ajax/load-ports/', views.ajax_load_ports, name='ajax_load_ports')
 
     

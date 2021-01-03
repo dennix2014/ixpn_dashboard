@@ -6,9 +6,9 @@ from django.http import HttpResponseForbidden, JsonResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .models import PortConnection, POP, Member, SwitchPort, Switch, Aka
+from .models import PortConnection, POP, Member, SwitchPort, Switch
 from .filters import PortFilter
-from .forms import MemberForm, POPForm, PortConnectionForm, AkaForm, SwitchPortForm, SwitchForm
+from .forms import MemberForm, POPForm, PortConnectionForm, SwitchPortForm, SwitchForm
 permission_denied_msg = """
 Permission denied. Please contact app admin if you feel this is a mistake"""
 
@@ -20,8 +20,6 @@ def home(request):
     total_port_fees_anum = 0
   
     total_membership_fee_anum = 0
-
-    port_count = 0
     
     table_body = """
     <div class="table-responsive">
@@ -33,7 +31,8 @@ def home(request):
             <th class="portc">Port Capacity</th>
             <th class="membership">Membership</th>
             <th class="status">Status</th>
-            <th class="no_of_ports">No Of Ports</th>
+            <th class="switch">Switch</th>
+            <th class="switch_port">Switch Port</th>
             <th class="fees_anum">Annual PortFee (&#x20A6;)</th>
             <th class="fees_qtr">Quaterly PortFee (&#x20A6;)</th>
             <th class="fees_mon">Monthly PortFee (&#x20A6;)</th>
@@ -54,11 +53,12 @@ def home(request):
             memb =  f'<td class="member">{port.member_name}</td>'
 
         table_body += (f'{memb}'
-        f'<td class="pop">{port.pop}</td>'
+        f'<td class="pop">{port.switch.pop}</td>'
         f'<td class="portc">{port.port_capacity}</td>'
         f'<td class="membership">{port.member_name.membership}</td>'
         f'<td class="status">{port.member_name.status}</td>'
-        f'<td class="no_of_ports">{port.no_of_port}</td>')
+        f'<td class="switch">{port.switch}</td>'
+        f'<td class="switch_port">{port.switch_port}</td>')
         
         """if member is active and a full member, then apply fees. Also count
             total no of ports"""
@@ -81,7 +81,7 @@ def home(request):
                             f'<td class="fees_mon">0</td><td class="fees_anum">0</td>'
                             f'<td class="fees_qtr">0</td><td class="fees_mon">0</td>')
 
-        port_count += port.no_of_port
+     
 
         table_body += f'<td class="date">{port.date_connected}</td></tr>'
 
@@ -92,7 +92,8 @@ def home(request):
                     f'<td class="portc"> - </td>'
                     f'<td class="membership"> - </td>'
                     f'<td class="status"> - </td>'
-                    f'<td class="no_of_ports">{port_count}</td>'
+                    f'<td class="switch"> - </td>'
+                    f'<td class="switch_port"> - </td>'
                     f'<td class="fees_anum">{(total_port_fees_anum):,}</td>'
                     f'<td class="fees_qtr">{round((total_port_fees_anum/4)):,}</td>'
                     f'<td class="fees_mon">{round((total_port_fees_anum/12)):,}</td>'
@@ -127,9 +128,8 @@ def add_or_edit_pop(request, pk=None, slug=None):
                 obj.created_by = request.user
                 obj.save()
                 messages.success(request, f'{obj} saved successfully')
-                return redirect('home')
+                return redirect('list_pops')
             else:
-                form = POPForm(instance=pop_obj)
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_pop.html', {'form': form})
 
@@ -159,7 +159,6 @@ def add_or_edit_portconnection(request, pk=None, slug=None):
                 messages.success(request, f'{obj} saved successfully')
                 return redirect('home')
             else:
-                form = PortConnectionForm(instance=portconnection_obj)
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_portconnection.html', 
                                                             {'form': form})
@@ -189,7 +188,6 @@ def add_or_edit_member(request, pk=None, slug=None):
                 obj.save()
                 return redirect('home')
             else:
-                form = MemberForm(instance=member_obj)
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_member.html', {'form': form})
 
@@ -263,7 +261,7 @@ def list_pops(request):
 
         table_body += (f'{name}'
         f'<td>{pop.state_located}</td>'
-        f'<td>{PortConnection.objects.all().filter(pop=pop.id).count()}</td></tr>')
+        f'<td>{PortConnection.objects.all().filter(switch__pop=pop.id).count()}</td></tr>')
     
     table_body += '</table>'
     
@@ -287,7 +285,6 @@ def add_or_edit_switch(request, pk=None, slug=None):
                 obj.save()
                 return redirect('home')
             else:
-                form = SwitchForm(instance=switch_obj)
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_switch.html', {'form': form})
 
@@ -319,7 +316,6 @@ def add_or_edit_switchport(request, pk=None, slug=None):
                 obj.save()
                 return redirect('home')
             else:
-                form = SwitchPortForm(instance=switchport_obj)
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_switchport.html', {'form': form})
 
@@ -335,40 +331,11 @@ def add_or_edit_switchport(request, pk=None, slug=None):
         messages.error(request, permission_denied_msg)
         return redirect('home')
 
-@login_required
-def add_or_edit_aka(request, pk=None, slug=None):
-    if request.user.has_perm('members.add_member'):
-        aka_obj = get_object_or_404(Aka, pk=pk) if pk else None
-        form = AkaForm(request.POST, request.FILES, 
-                                instance=aka_obj)
-
-        if request.method == 'POST':
-            if form.is_valid():
-                obj = form.save(commit=False)
-                obj.created_by = request.user
-                messages.success(request, f'{obj} saved successfully')
-                obj.save()
-                return redirect('home')
-            else:
-                messages.error(request, 'Correct errors indicated and try again')
-                return render(request, 'add_or_edit_aka.html', {'form': form,})
-
-        elif request.method == 'GET':
-            form = AkaForm(instance=aka_obj)
-            context = {
-                'form': form,
-                'aka_obj': aka_obj,
-            }
-            return render(request, 'add_or_edit_aka.html', context)
-
-    else:
-        messages.error(request, permission_denied_msg)
-        return redirect('home')
 
 
 def ajax_load_ports(request):
     switch_id = request.GET.get('switch')
-    ports = SwitchPort.objects.filter(switch_id=switch_id).exclude(id__in=Aka.objects.filter(switch_id = switch_id).values('pot_id'))
+    ports = SwitchPort.objects.filter(switch_id=switch_id).exclude(id__in=PortConnection.objects.filter(switch_id = switch_id).values('switch_port_id'))
     html = '<option value="">---------</option>'
     for port in ports:
         html += f'<option value="{port.id}">{port.name}</option>'
