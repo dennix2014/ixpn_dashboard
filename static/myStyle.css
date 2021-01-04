@@ -101,6 +101,9 @@ div.tty {
 .hidden-filter-icon {
     display: block;
     color: whitesmoke;
+    float:right;
+    position: relative;
+    z-index: 10;
 }
 .tty {
     display: none;
@@ -188,7 +191,7 @@ caption {
 .heading1 {
     color:#2B5928;
     margin-top: 1em;
-    margin-bottom: 3em;
+    margin-bottom: 1em;
 }
 
 label{
@@ -243,4 +246,12 @@ button:focus {
 
   #id_switch_port option[disabled] {
     display: none;
+}
+
+.green {
+    color:  #2B5928;
+}
+
+.amber {
+    color: orangered;
 }

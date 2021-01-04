@@ -24,6 +24,7 @@ def home(request):
     table_body = """
     <div class="table-responsive">
     <table class=""><caption>ALL PORT CONNECTIONS </caption>
+    <thead>
         <tr class="">
             <th class="index">S/No</th>
             <th class="member">Member</th>
@@ -41,7 +42,7 @@ def home(request):
             <th class="fees_mon">Monthly MembershipFee (&#x20A6;)</th>
             <th class="date">Date Connected</th>
             
-        </tr>"""
+        </tr></thead><tbody>"""
 
     for index, port in enumerate(f.qs):
         table_body += f'<tr class=""><td class="index">{index + 1}</td>'
@@ -102,7 +103,7 @@ def home(request):
                     f'<td class="fees_mon">{round((total_membership_fee_anum)/12):,}</td>'
                     f'<td class="date"> - </td></tr>')
       
-    table_body += f'</table></div><br>'
+    table_body += f'</tbody></table></div><br>'
     context = {
         'html':table_body,
         'filter':f,}
@@ -152,6 +153,7 @@ def add_or_edit_portconnection(request, pk=None, slug=None):
                                 instance=portconnection_obj)
 
         if request.method == 'POST':
+            PortConnectionForm.request_change=True
             if form.is_valid():
                 obj = form.save(commit=False)
                 obj.created_by = request.user
@@ -239,6 +241,9 @@ def list_members(request):
 
 @login_required
 def list_pops(request):
+    total_10g = 0
+    total_1g = 0
+    total_100m = 0
     pops = POP.objects.all().order_by('name')
 
     table_body = """
@@ -247,7 +252,9 @@ def list_pops(request):
             <th>S/NO</th>
             <th>NAME</th>
             <th>STATE LOCATED</th>
-            <th>NO OF MEMBERS PRESENT</th>
+            <th>10G CONNECTIONS</th>
+            <th>1G CONNECTIONS</th>
+            <th>100M CONNECTIONS</th>
         </tr>"""
 
     for index, pop in enumerate(pops):
@@ -260,8 +267,26 @@ def list_pops(request):
             name =  f'<td>{pop.name}</td>'
 
         table_body += (f'{name}'
-        f'<td>{pop.state_located}</td>'
-        f'<td>{PortConnection.objects.all().filter(switch__pop=pop.id).count()}</td></tr>')
+        f'<td>{pop.state_located}</td>')
+        no_of_10g_conns = PortConnection.objects.filter(switch__pop=pop.id, port_capacity="10G").count()
+        no_of_1g_conns = PortConnection.objects.filter(switch__pop=pop.id, port_capacity="1G").count()
+        no_of_100m_conns = PortConnection.objects.filter(switch__pop=pop.id, port_capacity="100M").count()
+        table_body += (f'<td>{no_of_10g_conns}</td>'
+        f'<td>{no_of_1g_conns}</td>'
+        f'<td>{no_of_100m_conns}</td></tr>')
+
+        total_10g += no_of_10g_conns
+        total_1g += no_of_1g_conns
+        total_100m += no_of_100m_conns
+        
+    table_body += (
+        f'<tr><td>TOTAL</td>'
+        f'<td></td>'
+        f'<td></td>'
+        f'<td>{total_10g}</td>'
+        f'<td>{total_1g}</td>'
+        f'<td>{total_100m}</td></tr>'
+    )
     
     table_body += '</table>'
     
@@ -272,7 +297,7 @@ def list_pops(request):
 
 @login_required
 def add_or_edit_switch(request, pk=None, slug=None):
-    if request.user.has_perm('members.add_member'):
+    if request.user.has_perm('members.add_switch'):
         switch_obj = get_object_or_404(Switch, pk=pk) if pk else None
         form = SwitchForm(request.POST, request.FILES, 
                                 instance=switch_obj)
@@ -303,11 +328,11 @@ def add_or_edit_switch(request, pk=None, slug=None):
 
 @login_required
 def add_or_edit_switchport(request, pk=None, slug=None):
-    if request.user.has_perm('members.add_member'):
+    if request.user.has_perm('members.add_switchport'):
         switchport_obj = get_object_or_404(SwitchPort, pk=pk) if pk else None
         form = SwitchPortForm(request.POST, request.FILES, 
                                 instance=switchport_obj)
-
+      
         if request.method == 'POST':
             if form.is_valid():
                 obj = form.save(commit=False)
@@ -321,6 +346,7 @@ def add_or_edit_switchport(request, pk=None, slug=None):
 
         elif request.method == 'GET':
             form = SwitchPortForm(instance=switchport_obj)
+        
             context = {
                 'form': form,
                 'switchport_obj': switchport_obj,
@@ -335,11 +361,109 @@ def add_or_edit_switchport(request, pk=None, slug=None):
 
 def ajax_load_ports(request):
     switch_id = request.GET.get('switch')
+    switch_port_id = request.GET.get('switch_port_id')
+    switch_port_name = request.GET.get('switch_port_name')
     ports = SwitchPort.objects.filter(switch_id=switch_id).exclude(id__in=PortConnection.objects.filter(switch_id = switch_id).values('switch_port_id'))
-    html = '<option value="">---------</option>'
+    html = f'<option value="{switch_port_id}">{switch_port_name}</option>'
     for port in ports:
         html += f'<option value="{port.id}">{port.name}</option>'
     response = {'result':html}
         
     return JsonResponse(response) 
     
+
+@login_required
+def list_switches(request):
+    switches = Switch.objects.all().order_by('name')
+
+    table_body = """
+    <table><caption>ALL SWITCHES</caption>
+        <tr>
+            <th>S/NO</th>
+            <th>NAME</th>
+            <th>OEM</th>
+            <th>MODEL</th>
+            <th>SERIAL NO</th>
+            <th>POP</th>
+            <th>IP ADDRESS</th>
+            <th>SWITCH PORTS</th>
+        </tr>"""
+
+    for index, switch in enumerate(switches):
+        table_body += f'<tr><td>{index + 1}</td>'
+
+        #if request.user has the right permissions, then show edit option
+        if request.user.has_perm('members.add_switch'):
+            name = f'<td><a href="/edit_switch/{switch.id}/{switch.slug}/">{switch.name}</a></td>'
+        else:
+            name =  f'<td>{switch.name}</td>'
+
+        table_body += (
+        f'{name}'
+        f'<td>{switch.oem}</td>'
+        f'<td>{switch.model}</td>'
+        f'<td>{switch.serial_no}</td>'
+        f'<td>{switch.pop}</td>'
+        f'<td>{switch.ipv4_address}</td>'
+        f'<td><a href="/list_switch_ports/{switch.id}/{switch.slug}/">view ports</a></td></tr>')
+
+    
+    table_body += '</table>'
+    
+    context = {
+        'html': table_body
+    }
+    return render(request, 'list_switches.html', context)
+
+def list_switch_ports(request, pk, slug):
+    switch = get_object_or_404(Switch, pk=pk)
+    switch_ports = SwitchPort.objects.filter(switch=pk).order_by('pk')
+
+    table_body = f'<table><caption>SWITCHPORTS ON {switch}</caption>'
+    table_body += """
+        <tr>
+            <th>S/NO</th>
+            <th>NAME</th>
+            <th>CONNECTION</th>
+            <th>INT TYPE</th>
+            <th>MEDIA</th>
+            <th>STATUS</th>
+        </tr>"""
+
+    for index, switch_pot in enumerate(switch_ports):
+        table_body += f'<tr><td>{index + 1}</td>'
+
+         #if request.user has the right permissions, then show edit option
+        if request.user.has_perm('members.add_switchport'):
+            name = f'<td><a href="/edit_switchport/{switch_pot.id}/{switch_pot.slug}/">{switch_pot.name}</a></td>'
+        else:
+            name =  f'<td>{switch_pot.name}</td>'
+        
+        table_body +=  f'{name}'
+
+        conn = PortConnection.objects.filter(switch_port__pk=switch_pot.id)
+        if conn:
+            connection = [item.member_name.short_name for item in conn]
+            status = 'Peering'
+            claz = 'green'
+        else:
+            connection = '-'
+            status = 'Not assigned'
+            claz = 'amber'
+        table_body += (
+       
+        f'<td><strong>{connection[0]}</strong></td>'
+        f'<td>{switch_pot.int_type}</td>'
+        f'<td>{switch_pot.media}</td>'
+        f'<td class="{claz}">{status}</td></tr>'
+        )
+      
+
+    
+    table_body += '</table>'
+    
+    context = {
+        'html': table_body
+    }
+    return render(request, 'list_switches.html', context)
+

@@ -6,14 +6,22 @@ $('.reset-button').on('click', function(){
     window.location.href = url;
 });
 
+
 $(document).on('click', '.confirm-delete', function(){
     return confirm('Are you sure you want to delete this?');
 })
 
 
- $(".hidden-filter-icon").click(function(){
+$(".hidden-filter-icon").click(function(){
     $(".tty").toggle();
-  });
+});
+
+
+function resetColumns() {
+    for (i = 0; i < classez.length; i++) {
+        $(classez[i]).hide();
+    }
+};
 
 
 var classez = ['.index', '.member', '.pop', '.portc', '.membership', '.status',
@@ -23,13 +31,15 @@ var normal_screen_size = ['.index', '.member', '.pop', '.portc', '.membership', 
 
 var isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
 
-function resetColumns() {
-    for (i = 0; i < classez.length; i++) {
-        $(classez[i]).hide();
-      }
-};
+
 $(document).ready(function () {
     resetColumns();
+    
+    var switchId = $('#id_switch').val();
+    if (switchId) {
+        loadSwitchPorts()
+    }
+    
     $('#id_switch_port option').prop('disabled', true);
     $('.dateinput').attr('type', 'date');
 
@@ -71,9 +81,9 @@ var checks = document.querySelectorAll(".columns");
 
 var max;
 if (isMobile) {
-    max = 4
+    max = 3
 }else {
-    max = 8
+    max = 7
 }
 
 for (var i = 0; i < checks.length; i++)
@@ -88,21 +98,32 @@ function selectiveCheck (event) {
 };
 
 
-
-$("#id_switch").on('change mouseenter click', function () {
+function loadSwitchPorts () {
+    var switchId = $('#id_switch').val();
     var urll = $("#Urll").attr("data-ports-url");
-    var switchId = $(this).val();
-    console.log(urll)
-    console.log(switchId)
+    
+    var boundSwitchPortName = $("#swiname").attr("data-ports-name");
+    var boundSwitchPortid = $("#swiid").attr("data-ports-id");
 
     $.ajax({ 
       url: urll,
       data: {
-        'switch': switchId
+        'switch': switchId,
+        'switch_port_id' : boundSwitchPortid,
+        'switch_port_name' : boundSwitchPortName,
       },
       success: function (data) { 
         $("#id_switch_port").html(data.result);
       }
     });
 
-  });
+}
+
+
+$("#id_switch").on('change', function () {
+    var switchId = $('#id_switch').val();
+    if (switchId) {
+        loadSwitchPorts()
+    }
+});
+

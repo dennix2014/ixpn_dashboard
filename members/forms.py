@@ -7,10 +7,12 @@ class POPForm(forms.ModelForm):
         fields = ['name', 'state_located']
 
 class PortConnectionForm(forms.ModelForm):
+   
     class Meta:
         model = PortConnection
         fields = ['member_name', 'port_capacity', 'switch', 'switch_port',
         'port_fee', 'membership_fee', 'date_connected']
+
 
 class MemberForm(forms.ModelForm):
     class Meta:

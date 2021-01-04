@@ -45,6 +45,9 @@
                 <li class="nav-item">
                   <a class="nav-link active" href="{% url 'list_pops' %}">POPs</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'list_switches' %}">Switches</a>
+                  </li>
                 {% if perms.add_pop and perms.add_member and perms.add_portconnection%}
                 <li class="nav-item dropdown">
                     <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -104,7 +107,7 @@
 
         {% if messages %}
         {% else %}
-        <br><br><br><br>
+        <br><br>
         {% endif %}
         {% if user.is_authenticated %}
     <img src="{% static 'ixpn5.png' %}" class="rounded mx-auto d-block" alt="IXPN LOGO">

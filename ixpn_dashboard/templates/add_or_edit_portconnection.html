@@ -12,6 +12,9 @@
 <form method="POST">
     {% csrf_token %}
     <input type="hidden" id="Urll" data-ports-url="{% url 'ajax_load_ports' %}" />
+    <input type="hidden" id="swiname" data-ports-name="{{ port_obj.switch_port.name }}" />
+    <input type="hidden" id="swiid" data-ports-id="{{ port_obj.switch_port.id }}" />
+
 
     <div class="form-row justify-content-center">
         <div class="form-group col-md-6 mr-4 align-center">

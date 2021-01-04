@@ -41,6 +41,12 @@ urlpatterns = [
     path('add_switch/', 
         views.add_or_edit_switch, name='add_switch'),
 
+    path('list_switches/', 
+        views.list_switches, name='list_switches'),
+
+     path('list_switch_ports/<int:pk>/<slug:slug>/', 
+        views.list_switch_ports, name='list_switch_ports'),
+
     path('edit_switchport/<int:pk>/<slug:slug>/', 
         views.add_or_edit_switchport, name='edit_switchport'),
 

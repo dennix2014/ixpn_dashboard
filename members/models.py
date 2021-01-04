@@ -40,6 +40,9 @@ class Member(Editor):
     short_name = models.CharField(max_length=100, unique=True)
     status = models.CharField(max_length=10, choices=status, default='Active')
     membership = models.CharField(max_length=20, choices=membership, default='Full')
+
+    class Meta:
+        ordering = ['short_name']
     
    
 
@@ -70,7 +73,7 @@ class Switch(Editor):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.name}, {self.pop}'
+        return f'{self.name}'
 
 class SwitchPort(Editor):
     name = models.CharField(max_length=20)
@@ -78,7 +81,8 @@ class SwitchPort(Editor):
     media = models.CharField(max_length=15, choices=media)
     switch = models.ForeignKey(Switch, on_delete=models.CASCADE, null=True, blank=True, related_name='swichy')
 
-
+    
+            
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.name + '-' + self.switch)
@@ -86,7 +90,7 @@ class SwitchPort(Editor):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.int_type}, {self.name},'
+        return f'{self.name},'
 
 class PortConnection(Editor):
     member_name = models.ForeignKey(Member, on_delete=models.CASCADE, default=1, related_name='memcon')
@@ -96,6 +100,15 @@ class PortConnection(Editor):
     port_fee = models.IntegerField(default=0)
     membership_fee = models.IntegerField(default=0)
     date_connected = models.DateField(default=timezone.now)
+
+    class Meta:
+        ordering = ['member_name']
+
+    def statos(self):
+        if self.switch_port:
+            return 'yes'
+        else:
+            return 'no'
     
 
     def save(self, *args, **kwargs):

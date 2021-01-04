@@ -5,9 +5,9 @@
 {% block content %}
 
 {% if switch_obj %}
-<h1 class="text-center heading1 animated bounceInDown">Edit {{ port_obj }}</h1>
+<h1 class="text-center heading1 animated bounceInDown">Edit {{ switch_obj }}</h1>
 {% else %}
-<h1 class="text-center heading1 animated bounceInDown">Add port connection</h1>
+<h1 class="text-center heading1 animated bounceInDown">Add Switch</h1>
 {% endif %}
 <form method="POST">
     {% csrf_token %}

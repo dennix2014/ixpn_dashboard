@@ -1,3 +1,4 @@
+
 $('.reset-button').on('click', function(){
     $("select").each(function() { this.selectedIndex = 0 });
     $(".numberinput").val("");
@@ -47,6 +48,7 @@ $(document).ready(function () {
         $('#submitFilter').click();
       });
 
+
     if (isMobile) {
         for (i = 0; i < mobile_screen_size.length; i++) {
             $(mobile_screen_size[i]).show();
@@ -81,9 +83,9 @@ var checks = document.querySelectorAll(".columns");
 
 var max;
 if (isMobile) {
-    max = 3
+    max = 4
 }else {
-    max = 7
+    max = 8
 }
 
 for (var i = 0; i < checks.length; i++)
@@ -126,4 +128,3 @@ $("#id_switch").on('change', function () {
         loadSwitchPorts()
     }
 });
-

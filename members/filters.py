@@ -1,10 +1,13 @@
 import django_filters
-from .models import PortConnection
+from .models import PortConnection, POP
 from .all_choices import status, membership
 
 class PortFilter(django_filters.FilterSet):
     status = django_filters.ChoiceFilter(field_name='member_name', 
         method='filter_status', label='Status', choices=status)
+
+    pop = django_filters.ModelChoiceFilter(field_name='switch__pop', 
+        method='filter_pop', label='POP', queryset=POP.objects.all())
 
     membership = django_filters.ChoiceFilter(field_name='member_name', 
         method='filter_membership', label='Membership', choices=membership)
@@ -35,4 +38,4 @@ class PortFilter(django_filters.FilterSet):
         }
       
 
-   
+
