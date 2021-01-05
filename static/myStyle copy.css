@@ -34,8 +34,7 @@ body {
     font-size: small;
     color: #2B5928;
    font-weight: bolder;
-   padding-left: 20px;
-   padding-right: 5px;
+   padding-left: 40px;
 }
 
 div.tty {
@@ -43,6 +42,9 @@ div.tty {
     top: 0;
     border: 5px solid #2B5928;
     border-radius: 10px;
+    /* padding-left: 10px;
+    padding-right: 10px; */
+
 
 }
 
@@ -50,7 +52,6 @@ div.tty {
 .main {
     flex: 75%;
     background-color: white;
-    /* padding-right: 5px; */
 
 }
 .blank {
@@ -86,21 +87,10 @@ div.tty {
     display: none;
    
 }
-.main {
-    margin: 8px;
-    /* padding-right: 15px; */
+.side, .main {
+    margin: 5%;
 }
 
-.side {
-    margin: 8px;
-    padding-right: 20px;
-    padding-left: 10px;
-}
-
-
-.portc-section {
-    margin-left: 10px;
-}
 
 .hidden-filter-icon {
     display: block;
@@ -108,7 +98,6 @@ div.tty {
     float:right;
     position: relative;
     z-index: 10;
-    padding-right: 10px;
 }
 .tty {
     display: none;
@@ -119,6 +108,13 @@ div.tty {
 }
 
 
+table.pop-table td:nth-of-type(3n+0) {
+    display: none;
+}
+table.pop-table th:nth-of-type(3n+0) {
+    display: none;
+}
+
 table.switch-table td:nth-of-type(4),
 table.switch-table td:nth-of-type(5),
 table.switch-table td:nth-of-type(6),
@@ -126,21 +122,17 @@ table.switch-table td:nth-of-type(7),
 table.switch-table th:nth-of-type(4),
 table.switch-table th:nth-of-type(5),
 table.switch-table th:nth-of-type(6),
-table.switch-table th:nth-of-type(7),
-table.switchport-table th:nth-of-type(4),
-table.switchport-table th:nth-of-type(5),
-table.switchport-table td:nth-of-type(4),
-table.switchport-table td:nth-of-type(5),
-table.pop-table td:nth-of-type(1),
-table.pop-table th:nth-of-type(1),
-table.pop-table td:nth-of-type(6),
-table.pop-table th:nth-of-type(6) {
+table.switch-table th:nth-of-type(7) {
 
     display: none;
 }
 
-.table-responsive {
-    padding-right: 10px;
+table.switchport-table th:nth-of-type(4),
+table.switchport-table th:nth-of-type(5),
+table.switchport-table td:nth-of-type(4),
+table.switchport-table td:nth-of-type(5) {
+
+    display: none;
 }
 
 }
@@ -205,7 +197,6 @@ caption {
   .table-responsive {
     min-height: .01%;
     overflow-x: auto;
-    padding-right: 10px;
 }
 
 
@@ -287,3 +278,4 @@ button:focus {
 .amber {
     color: orangered;
 }
+

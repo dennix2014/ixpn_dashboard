@@ -23,7 +23,7 @@ def home(request):
     
     table_body = """
     <div class="table-responsive">
-    <table class=""><caption>ALL PORT CONNECTIONS </caption>
+    <table class="portconnection-table"><caption>ALL PORT CONNECTIONS </caption>
     <thead>
         <tr class="">
             <th class="index">S/No</th>
@@ -247,14 +247,14 @@ def list_pops(request):
     pops = POP.objects.all().order_by('name')
 
     table_body = """
-    <table><caption>ALL POPS</caption>
+    <table class="pop-table"><caption>ALL POPS</caption>
         <tr>
             <th>S/NO</th>
             <th>NAME</th>
             <th>STATE LOCATED</th>
-            <th>10G CONNECTIONS</th>
-            <th>1G CONNECTIONS</th>
-            <th>100M CONNECTIONS</th>
+            <th>10GCount</th>
+            <th>1GCount</th>
+            <th>100MCount</th>
         </tr>"""
 
     for index, pop in enumerate(pops):
@@ -377,7 +377,7 @@ def list_switches(request):
     switches = Switch.objects.all().order_by('name')
 
     table_body = """
-    <table><caption>ALL SWITCHES</caption>
+    <table class="switch-table"><caption>ALL SWITCHES</caption>
         <tr>
             <th>S/NO</th>
             <th>NAME</th>
@@ -419,7 +419,7 @@ def list_switch_ports(request, pk, slug):
     switch = get_object_or_404(Switch, pk=pk)
     switch_ports = SwitchPort.objects.filter(switch=pk).order_by('pk')
 
-    table_body = f'<table><caption>SWITCHPORTS ON {switch}</caption>'
+    table_body = f'<table class="switchport-table"><caption>SWITCHPORTS ON {switch}</caption>'
     table_body += """
         <tr>
             <th>S/NO</th>
