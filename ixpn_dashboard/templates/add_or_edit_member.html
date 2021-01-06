@@ -6,9 +6,9 @@
 
 {% if member_obj %}
 
-<h1 class="text-center heading1 animated bounceInDown">Edit {{ member_obj }}</h1>
+<h4 class="text-center heading1 animated bounceInDown">Edit {{ member_obj }}</h4>
 {% else %}
-<h1 class="text-center heading1 animated bounceInDown">Add Member</h1>
+<h4 class="text-center heading1 animated bounceInDown">Add Member</h4>
 {% endif %}
 <form method="POST">
 {% csrf_token %}
