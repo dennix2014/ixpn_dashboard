@@ -450,7 +450,7 @@ def list_switch_ports(request, pk, slug):
             port_capacity = [item.port_capacity for item in conn]
         else:
             connection = '-'
-            status = 'Not assigned'
+            status = 'Unset'
             claz = 'amber'
             port_capacity = '-'
         table_body += (
