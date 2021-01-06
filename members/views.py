@@ -252,9 +252,9 @@ def list_pops(request):
             <th>S/NO</th>
             <th>NAME</th>
             <th>STATE LOCATED</th>
-            <th>10GCount</th>
-            <th>1GCount</th>
-            <th>100MCount</th>
+            <th>10G Count</th>
+            <th>1G Count</th>
+            <th>100M Count</th>
         </tr>"""
 
     for index, pop in enumerate(pops):
@@ -280,7 +280,7 @@ def list_pops(request):
         total_100m += no_of_100m_conns
         
     table_body += (
-        f'<tr><td>TOTAL</td>'
+        f'<tr class="total"><td>TOTAL</td>'
         f'<td></td>'
         f'<td></td>'
         f'<td>{total_10g}</td>'
