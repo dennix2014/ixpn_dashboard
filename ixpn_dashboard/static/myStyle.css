@@ -35,13 +35,13 @@ body {
     color: #2B5928;
    font-weight: bolder;
    padding-left: 20px;
-   padding-right: 5px;
+   padding-right: 10px;
 }
 
 div.tty {
     position: sticky;
     top: 0;
-    border: 5px solid #2B5928;
+    border: 2px solid #2B5928;
     border-radius: 10px;
 
 }
@@ -88,7 +88,7 @@ div.tty {
 }
 .main {
     margin: 8px;
-    padding-right: 15px;
+    padding-right: 3px;
 }
 
 .side {
@@ -153,7 +153,7 @@ width: 100%;
 } 
 
 td, th {
-border: 2px solid black;
+/* border: 2px solid black; */
 text-align: left;
 padding: 5px;
 font-size: small;
