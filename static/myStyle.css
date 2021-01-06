@@ -287,3 +287,11 @@ button:focus {
 .amber {
     color: orangered;
 }
+
+tr.total {
+    background-color:#2B5928;
+    color: whitesmoke;
+    font-size:larger;
+    font-weight: 600;
+}
+

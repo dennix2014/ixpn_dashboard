@@ -87,7 +87,7 @@ def home(request):
         table_body += f'<td class="date">{port.date_connected}</td></tr>'
 
         # Add row for total no of port, total port and membership fee
-    table_body += (f'<tr class=""><td class="index"><strong>TOTAL</strong></td>'
+    table_body += (f'<tr class="total"><td class="index"><strong>TOTAL</strong></td>'
                     f'<td class="member"> - </td>'
                     f'<td class="pop"> - </td>'
                     f'<td class="portc"> - </td>'
