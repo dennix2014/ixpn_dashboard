@@ -425,6 +425,7 @@ def list_switch_ports(request, pk, slug):
             <th>S/NO</th>
             <th>NAME</th>
             <th>CONNECTION</th>
+            <th>PORT CAPACITY</th>
             <th>INT TYPE</th>
             <th>MEDIA</th>
             <th>STATUS</th>
@@ -446,13 +447,15 @@ def list_switch_ports(request, pk, slug):
             connection = [item.member_name.short_name for item in conn]
             status = 'Peering'
             claz = 'green'
+            port_capacity = [item.port_capacity for item in conn]
         else:
             connection = '-'
             status = 'Not assigned'
             claz = 'amber'
+            port_capacity = '-'
         table_body += (
-       
         f'<td><strong>{connection[0]}</strong></td>'
+        f'<td><strong>{port_capacity[0]}</strong></td>'
         f'<td>{switch_pot.int_type}</td>'
         f'<td>{switch_pot.media}</td>'
         f'<td class="{claz}">{status}</td></tr>'
