@@ -109,6 +109,15 @@ div.tty {
     position: relative;
     z-index: 10;
     padding-right: 10px;
+    font-size: smaller;
+}
+
+.dropdown {
+    display: block;
+    float:right;
+    position: relative;
+    z-index: 10;
+    font-size: smaller;
 }
 .tty {
     display: none;
@@ -297,3 +306,36 @@ tr.total {
     font-weight: 600;
 }
 
+div.pager {
+    text-align: center; 
+    margin-top: 15px;
+}
+
+div.pager span {
+    display: inline-block;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8;
+    text-align: center;
+    cursor: pointer;
+    background: #191919;
+    color: #ccc;
+    margin-right: 0.5em;
+}
+
+div.pager span.active {
+    background: #fff;
+    color:#191919;
+    font-weight:bold;
+    text-align:center;
+}
+
+
+.dropdown {
+    display: block;
+    float:right;
+    position: relative;
+    z-index: 10;
+    padding-right: 10px;
+    
+}

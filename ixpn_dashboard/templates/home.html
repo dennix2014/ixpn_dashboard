@@ -29,11 +29,11 @@
 
 <div class="portc-section">
     <div class="hidden-filter-icon">
-        <button class="btn submit-button" type="button">&nbsp;<i class="fa fa-filter filter-icon fa-1x"></i>filter&nbsp;&nbsp;</button>
+        <button class="btn submit-button" type="button">&nbsp;<i class="fa fa-filter filter-icon fa-1x"></i>&nbsp;&nbsp;</button>
     </div>
     <div class="dropdown">
         <button class="btn submit-button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Select Colmns
+          Columns
         </button>
         <form class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <label class="dropdown-item"><input type="checkbox" class="columns" name="port_connection_column" id="index" value=".index">&nbsp;&nbsp;S/No</label>
@@ -54,6 +54,16 @@
         </form>
       </div>
     <div class="animate__animated animate__backInLeft">
+        <label>Show&nbsp;
+            <select id="table-length">
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>&nbsp;entries
+        </label>
         {{ html|safe}}
     </div>
 

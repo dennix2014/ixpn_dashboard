@@ -23,7 +23,7 @@ def home(request):
     
     table_body = """
     <div class="table-responsive">
-    <table class="portconnection-table"><caption>ALL PORT CONNECTIONS </caption>
+    <table class="paginated"><caption>ALL PORT CONNECTIONS </caption>
     <thead>
         <tr class="">
             <th class="index">S/No</th>
@@ -210,14 +210,18 @@ def list_members(request):
     members = Member.objects.all().order_by('short_name')
 
     table_body = """
-    <table><caption>ALL MEMBERS</caption>
+    <table class="paginated"><caption>ALL MEMBERS</caption>
+    <thead>
         <tr>
             <th>S/NO</th>
             <th>NAME</th>
             <th>STATUS</th>
             <th>MEMBERSHIP</th>
           
-        </tr>"""
+        </tr>
+    </thead>
+    <tbody>
+        """
 
     for index, mem in enumerate(members):
         table_body += f'<tr><td>{index + 1}</td>'
@@ -232,7 +236,7 @@ def list_members(request):
         f'<td>{mem.status}</td>'
         f'<td>{mem.membership}</td>')
     
-    table_body += '</table>'
+    table_body += '</tbody></table>'
 
     context = {
         'html': table_body
@@ -419,8 +423,9 @@ def list_switch_ports(request, pk, slug):
     switch = get_object_or_404(Switch, pk=pk)
     switch_ports = SwitchPort.objects.filter(switch=pk).order_by('pk')
 
-    table_body = f'<table class="switchport-table"><caption>SWITCHPORTS ON {switch}</caption>'
+    table_body = f'<table class="switchport-table paginated"><caption>SWITCHPORTS ON {switch}</caption>'
     table_body += """
+    <thead>
         <tr>
             <th>S/NO</th>
             <th>NAME</th>
@@ -429,7 +434,8 @@ def list_switch_ports(request, pk, slug):
             <th>INT TYPE</th>
             <th>MEDIA</th>
             <th>STATUS</th>
-        </tr>"""
+        </tr>
+        </thead><tbody>"""
 
     for index, switch_pot in enumerate(switch_ports):
         table_body += f'<tr><td>{index + 1}</td>'
@@ -463,10 +469,10 @@ def list_switch_ports(request, pk, slug):
       
 
     
-    table_body += '</table>'
+    table_body += '</tbody></table>'
     
     context = {
         'html': table_body
     }
-    return render(request, 'list_switches.html', context)
+    return render(request, 'list_switch_ports.html', context)
 
