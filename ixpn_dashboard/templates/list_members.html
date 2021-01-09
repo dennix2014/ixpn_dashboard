@@ -16,5 +16,6 @@
         </select>&nbsp;entries
     </label>
     {{ html|safe }}
+    <input type="hidden" id="homeUrl" home-url="{% url 'home' %}" />
 </div>
 {% endblock %}

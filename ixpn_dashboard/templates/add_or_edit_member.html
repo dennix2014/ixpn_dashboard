@@ -28,19 +28,21 @@
        
 </div>
 <div class="form-row justify-content-center">
-    <div class="form-group col-md-6 mr-4 align-center">
-        <button type="submit" class="btn btn-block submit-button">Submit</button>
-      
+    {% if perms.members.add_member and member_obj %}
+    <div class="form-group col-md-2 mr-4 align-center">
+            <a href="{% url 'delete_item' member_obj.id member_obj.slug model %}" class="btn btn-danger btn-block confirm-delete">Delete</a>
+</div>{% endif %}
+    <div class="form-group col-md-2 mr-4 align-center">
+        <button type="submit" class="btn btn-block submit-button">Save</button>  
 </div>
 </div>
 </form>
+<div class="form-row justify-content-center">
+    
+<p>{{ member_obj.class.name }}</p></div>
 
-<!-- {% if org %}
-{% if perms.members.add_member %}
-<button class="btn btn-danger confirm-delete" type="button">
-    <a href="{% url 'delete_organisation' org.id org.slug %}">Delete Organisation</a>
-</button>
-{% endif %}
+<!-- {% if member_obj %}
+
 {% endif %} -->
 
 {% endblock %}

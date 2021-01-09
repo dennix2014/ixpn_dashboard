@@ -25,15 +25,14 @@ urlpatterns = [
 	path('', 
         views.home, name='home'),
 
-    path('delete_organisation/<int:pk>/<slug:slug>/', 
-        views.delete_member, name='delete_organisation'),
+    path('delete_item/<int:pk>/<slug:slug>/<str:model>/', 
+        views.delete_item, name='delete_item'),
 
     path('list_members/', 
         views.list_members, name='list_members'),
 
     path('list_pops/', 
         views.list_pops, name='list_pops'),
-
 
     path('edit_switch/<int:pk>/<slug:slug>/', 
         views.add_or_edit_switch, name='edit_switch'),
@@ -44,7 +43,7 @@ urlpatterns = [
     path('list_switches/', 
         views.list_switches, name='list_switches'),
 
-     path('list_switch_ports/<int:pk>/<slug:slug>/', 
+    path('list_switch_ports/<int:pk>/<slug:slug>/', 
         views.list_switch_ports, name='list_switch_ports'),
 
     path('edit_switchport/<int:pk>/<slug:slug>/', 

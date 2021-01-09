@@ -24,7 +24,11 @@
        
 </div>
 <div class="form-row justify-content-center">
-    <div class="form-group col-md-3 mr-3 align-center">
+    {% if perms.members.add_pop and pop_obj %}
+    <div class="form-group col-md-1 mr-4 align-center">
+            <a href="{% url 'delete_item' pop_obj.id pop_obj.slug model %}" class="btn btn-danger btn-block confirm-delete">Delete</a>
+</div>{% endif %}
+    <div class="form-group col-md-1 mr-3 align-center">
         <input type="submit" class="btn btn-block submit-button"/>
       </div>
      

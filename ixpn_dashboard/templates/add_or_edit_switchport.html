@@ -29,7 +29,11 @@
     </div>
        
    <div class="form-row justify-content-center ">
-    <div class="col-md-6">
+    {% if perms.members.add_portconnection and switchport_obj %}
+    <div class="form-group col-md-2 mr-4 align-center">
+            <a href="{% url 'delete_item' switchport_obj.id switchport_obj.slug model %}" class="btn btn-danger btn-block confirm-delete">Delete</a>
+</div>{% endif %}
+    <div class="col-md-2">
         <button type="submit" class="btn btn-block submit-button">Save Changes</button>
       </div>
    </div>

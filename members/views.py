@@ -22,8 +22,8 @@ def home(request):
     total_membership_fee_anum = 0
     
     table_body = """
-    <div class="table-responsive">
-    <table class="paginated"><caption>ALL PORT CONNECTIONS </caption>
+    <div class="">
+    <table class="paginated" id="dest"><caption>ALL PORT CONNECTIONS </caption>
     <thead>
         <tr class="">
             <th class="index">S/No</th>
@@ -85,9 +85,10 @@ def home(request):
      
 
         table_body += f'<td class="date">{port.date_connected}</td></tr>'
+    table_body += '</tbody>'
 
         # Add row for total no of port, total port and membership fee
-    table_body += (f'<tr class="total"><td class="index"><strong>TOTAL</strong></td>'
+    table_body += (f'<tfoot><tr class="total"><td class="index"><strong>TOTAL</strong></td>'
                     f'<td class="member"> - </td>'
                     f'<td class="pop"> - </td>'
                     f'<td class="portc"> - </td>'
@@ -103,7 +104,7 @@ def home(request):
                     f'<td class="fees_mon">{round((total_membership_fee_anum)/12):,}</td>'
                     f'<td class="date"> - </td></tr>')
       
-    table_body += f'</tbody></table></div><br>'
+    table_body += f'</tfoot></table></div><br>'
     context = {
         'html':table_body,
         'filter':f,}
@@ -112,16 +113,31 @@ def home(request):
 
     
 @login_required
-def delete_member(request, pk, slug):
-    p = Member.objects.get(pk=pk)
+def delete_item(request, pk, slug, model):
+    if model == 'Member':
+        p = Member.objects.get(pk=pk)
+        url = 'list_members'
+    elif model == 'POP':
+        p = POP.objects.get(pk=pk)
+        url = 'list_pops'
+    elif model == 'PortConnection':
+         p = PortConnection.objects.get(pk=pk)
+         url = 'home'
+    elif model == 'Switch':
+         p = Switch.objects.get(pk=pk)
+         url = 'list_switches'
+    elif model == 'SwitchPort': 
+         p = SwitchPort.objects.get(pk=pk)
+         url = 'list_switches'
     p.delete()
     messages.success(request, f'{p} successfully deleted')
-    return redirect('home')
+    return redirect(url)
 
 @login_required
 def add_or_edit_pop(request, pk=None, slug=None):
     if request.user.has_perm('members.add_pop'):
         pop_obj = get_object_or_404(POP, pk=pk) if pk else None
+        model_name = pop_obj._meta.model.__name__ if pk else None
         form = POPForm(request.POST, request.FILES, instance=pop_obj)
         if request.method == 'POST':
             if form.is_valid():
@@ -136,7 +152,9 @@ def add_or_edit_pop(request, pk=None, slug=None):
 
         elif request.method == 'GET':
             form = POPForm(instance=pop_obj)
-            context = {'form': form, 'pop_obj': pop_obj}
+            context = {'form': form, 
+            'pop_obj': pop_obj,
+            'model': model_name}
             return render(request, 'add_or_edit_pop.html', context)
 
     else:
@@ -148,6 +166,8 @@ def add_or_edit_portconnection(request, pk=None, slug=None):
     if request.user.has_perm('members.add_portconnection'):
         portconnection_obj = get_object_or_404(PortConnection, 
                                         pk=pk) if pk else None
+
+        model_name = portconnection_obj._meta.model.__name__ if pk else None
 
         form = PortConnectionForm(request.POST, request.FILES, 
                                 instance=portconnection_obj)
@@ -167,7 +187,9 @@ def add_or_edit_portconnection(request, pk=None, slug=None):
 
         elif request.method == 'GET':
             form = PortConnectionForm(instance=portconnection_obj)
-            context = {'form': form, 'port_obj': portconnection_obj}
+            context = {'form': form, 
+            'port_obj': portconnection_obj,
+            'model': model_name}
             return render(request, 'add_or_edit_portconnection.html', context)
 
     else:
@@ -179,6 +201,7 @@ def add_or_edit_portconnection(request, pk=None, slug=None):
 def add_or_edit_member(request, pk=None, slug=None):
     if request.user.has_perm('members.add_member'):
         member_obj = get_object_or_404(Member, pk=pk) if pk else None
+        model_name = member_obj._meta.model.__name__ if pk else None
         form = MemberForm(request.POST, request.FILES, 
                                 instance=member_obj)
 
@@ -198,6 +221,7 @@ def add_or_edit_member(request, pk=None, slug=None):
             context = {
                 'form': form,
                 'member_obj': member_obj,
+                'model': model_name
             }
             return render(request, 'add_or_edit_member.html', context)
 
@@ -210,7 +234,7 @@ def list_members(request):
     members = Member.objects.all().order_by('short_name')
 
     table_body = """
-    <table class="paginated"><caption>ALL MEMBERS</caption>
+    <table class="paginated" id="dest1"><caption>ALL MEMBERS</caption>
     <thead>
         <tr>
             <th>S/NO</th>
@@ -236,7 +260,7 @@ def list_members(request):
         f'<td>{mem.status}</td>'
         f'<td>{mem.membership}</td>')
     
-    table_body += '</tbody></table>'
+    table_body += '</tbody><tfoot><tr></tr></tfoot></table>'
 
     context = {
         'html': table_body
@@ -303,6 +327,7 @@ def list_pops(request):
 def add_or_edit_switch(request, pk=None, slug=None):
     if request.user.has_perm('members.add_switch'):
         switch_obj = get_object_or_404(Switch, pk=pk) if pk else None
+        model_name = switch_obj._meta.model.__name__  if pk else None
         form = SwitchForm(request.POST, request.FILES, 
                                 instance=switch_obj)
 
@@ -322,6 +347,7 @@ def add_or_edit_switch(request, pk=None, slug=None):
             context = {
                 'form': form,
                 'switch_obj': switch_obj,
+                'model': model_name
             }
             return render(request, 'add_or_edit_switch.html', context)
 
@@ -334,6 +360,7 @@ def add_or_edit_switch(request, pk=None, slug=None):
 def add_or_edit_switchport(request, pk=None, slug=None):
     if request.user.has_perm('members.add_switchport'):
         switchport_obj = get_object_or_404(SwitchPort, pk=pk) if pk else None
+        model_name = switchport_obj._meta.model.__name__ if pk else None
         form = SwitchPortForm(request.POST, request.FILES, 
                                 instance=switchport_obj)
       
@@ -354,6 +381,7 @@ def add_or_edit_switchport(request, pk=None, slug=None):
             context = {
                 'form': form,
                 'switchport_obj': switchport_obj,
+                'model': model_name
             }
             return render(request, 'add_or_edit_switchport.html', context)
 
@@ -423,7 +451,7 @@ def list_switch_ports(request, pk, slug):
     switch = get_object_or_404(Switch, pk=pk)
     switch_ports = SwitchPort.objects.filter(switch=pk).order_by('pk')
 
-    table_body = f'<table class="switchport-table paginated"><caption>SWITCHPORTS ON {switch}</caption>'
+    table_body = f'<table class="switchport-table paginated" id="dest2"><caption>SWITCHPORTS ON {switch}</caption>'
     table_body += """
     <thead>
         <tr>
@@ -469,7 +497,7 @@ def list_switch_ports(request, pk, slug):
       
 
     
-    table_body += '</tbody></table>'
+    table_body += '</tbody><tfoot><tr></tr></tfoot></table>'
     
     context = {
         'html': table_body

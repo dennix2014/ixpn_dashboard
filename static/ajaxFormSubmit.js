@@ -35,6 +35,10 @@ var isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
 $(document).ready(function () {
     resetColumns();
     changeTableLength();
+
+    $(function(){
+        $("#dest, #dest1, #dest2").addSortWidget();
+    });
     
     var switchId = $('#id_switch').val();
     if (switchId) {

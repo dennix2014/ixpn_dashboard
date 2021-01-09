@@ -50,7 +50,7 @@ div.tty {
 .main {
     flex: 75%;
     background-color: white;
-    /* padding-right: 5px; */
+    padding-right: 10px;
 
 }
 .blank {
@@ -100,6 +100,7 @@ div.tty {
 
 .portc-section {
     margin-left: 10px;
+    padding-right: 10px;
 }
 
 .hidden-filter-icon {
@@ -164,16 +165,14 @@ width: 100%;
 } 
 
 td, th {
-/* border: 2px solid black; */
+border-bottom: 1px solid #2B5928;
 text-align: left;
 padding: 5px;
 font-size: small;
 }
 
 
-tr:nth-child(even) {
-background-color: #dddddd;
-}
+
 
 
 caption {
@@ -185,6 +184,19 @@ caption {
   font-size: x-large;
 }
 
+th {
+  background: white;
+  position: sticky;
+  top: 50px; /* Don't forget this, required for the stickiness */
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+
+tfoot {
+    background: white;
+    position: sticky;
+    bottom: 50px; /* Don't forget this, required for the stickiness */
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+  }
 
 
   .navbar {
