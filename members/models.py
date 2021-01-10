@@ -85,7 +85,7 @@ class SwitchPort(Editor):
             
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.name + '-' + self.switch)
+            self.slug = slugify(self.name + '-' + self.switch.name)
 
         return super().save(*args, **kwargs)
 

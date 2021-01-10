@@ -211,7 +211,7 @@ def add_or_edit_member(request, pk=None, slug=None):
                 obj.created_by = request.user
                 messages.success(request, f'{obj} saved successfully')
                 obj.save()
-                return redirect('home')
+                return redirect('list_members')
             else:
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_member.html', {'form': form})
@@ -227,7 +227,7 @@ def add_or_edit_member(request, pk=None, slug=None):
 
     else:
         messages.error(request, permission_denied_msg)
-        return redirect('home')
+        return redirect('list_members')
 
 @login_required
 def list_members(request):
@@ -337,7 +337,7 @@ def add_or_edit_switch(request, pk=None, slug=None):
                 obj.created_by = request.user
                 messages.success(request, f'{obj} saved successfully')
                 obj.save()
-                return redirect('home')
+                return redirect('list_switches')
             else:
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_switch.html', {'form': form})
@@ -353,7 +353,7 @@ def add_or_edit_switch(request, pk=None, slug=None):
 
     else:
         messages.error(request, permission_denied_msg)
-        return redirect('home')
+        return redirect('list_switches')
 
 
 @login_required
@@ -370,7 +370,7 @@ def add_or_edit_switchport(request, pk=None, slug=None):
                 obj.created_by = request.user
                 messages.success(request, f'{obj} saved successfully')
                 obj.save()
-                return redirect('home')
+                return redirect('list_switches')
             else:
                 messages.error(request, 'Correct errors indicated and try again')
                 return render(request, 'add_or_edit_switchport.html', {'form': form})
