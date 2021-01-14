@@ -66,9 +66,9 @@ def home(request):
             
         if port.member_name.status == 'Active' and \
             port.member_name.membership == 'Full':
-            table_body += f'<td class="fees_anum">{(port.port_fee):,}</td>'
-            table_body += f'<td class="fees_qtr">{round(port.port_fee / 4):,}</td>'
-            table_body += f'<td class="fees_mon">{round(port.port_fee / 12):,}</td>'
+            table_body += f'<td class="fees_anum">{(port.port_fee * 12):,}</td>'
+            table_body += f'<td class="fees_qtr">{round(port.port_fee * 3):,}</td>'
+            table_body += f'<td class="fees_mon">{round(port.port_fee):,}</td>'
             table_body += f'<td class="fees_anum">{(port.membership_fee):,}</td>'
             table_body += f'<td class="fees_qtr">{round(port.membership_fee/4):,}</td>'
             table_body += f'<td class="fees_mon">{round(port.membership_fee/12):,}</td>'
@@ -96,9 +96,9 @@ def home(request):
                     f'<td class="status"> - </td>'
                     f'<td class="switch"> - </td>'
                     f'<td class="switch_port"> - </td>'
-                    f'<td class="fees_anum">{(total_port_fees_anum):,}</td>'
-                    f'<td class="fees_qtr">{round((total_port_fees_anum/4)):,}</td>'
-                    f'<td class="fees_mon">{round((total_port_fees_anum/12)):,}</td>'
+                    f'<td class="fees_anum">{(total_port_fees_anum * 12 ):,}</td>'
+                    f'<td class="fees_qtr">{round((total_port_fees_anum * 3)):,}</td>'
+                    f'<td class="fees_mon">{round((total_port_fees_anum)):,}</td>'
                     f'<td class="fees_anum">{(total_membership_fee_anum):,}</td>'
                     f'<td class="fees_qtr">{round((total_membership_fee_anum)/4):,}</td>'
                     f'<td class="fees_mon">{round((total_membership_fee_anum)/12):,}</td>'

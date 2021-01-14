@@ -16,7 +16,7 @@ class PortConnectionForm(forms.ModelForm):
 
         labels = {
             'membership_fee': 'Annual Membership Fee',
-            'port_fee': 'Annual Port Fee'
+            'port_fee': 'Monthly Port Fee'
         }
 
 
