@@ -22,7 +22,7 @@ def home(request):
     total_membership_fee_anum = 0
     
     table_body = """
-    <div class="">
+    <div id="portconnections">
     <table class="paginated" id="dest"><caption>ALL PORT CONNECTIONS </caption>
     <thead>
         <tr class="">
@@ -108,8 +108,12 @@ def home(request):
     context = {
         'html':table_body,
         'filter':f,}
+    response = {'result':table_body}
 
-    return render(request, 'home.html', context)
+    if request.is_ajax():
+        return JsonResponse(response)
+    else:
+        return render(request, 'home.html', context)
 
     
 @login_required
@@ -395,7 +399,9 @@ def ajax_load_ports(request):
     switch_id = request.GET.get('switch')
     switch_port_id = request.GET.get('switch_port_id')
     switch_port_name = request.GET.get('switch_port_name')
-    ports = SwitchPort.objects.filter(switch_id=switch_id).exclude(id__in=PortConnection.objects.filter(switch_id = switch_id).values('switch_port_id'))
+    ports = SwitchPort.objects.filter(switch_id=switch_id).exclude\
+                (id__in=PortConnection.objects.filter\
+                    (switch_id = switch_id).values('switch_port_id'))
     html = f'<option value="{switch_port_id}">{switch_port_name}</option>'
     for port in ports:
         html += f'<option value="{port.id}">{port.name}</option>'
