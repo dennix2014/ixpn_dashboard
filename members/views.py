@@ -118,24 +118,25 @@ def home(request):
     
 @login_required
 def delete_item(request, pk, slug, model):
-    if model == 'Member':
-        p = Member.objects.get(pk=pk)
-        url = 'list_members'
-    elif model == 'POP':
-        p = POP.objects.get(pk=pk)
-        url = 'list_pops'
-    elif model == 'PortConnection':
-         p = PortConnection.objects.get(pk=pk)
-         url = 'home'
-    elif model == 'Switch':
-         p = Switch.objects.get(pk=pk)
-         url = 'list_switches'
-    elif model == 'SwitchPort': 
-         p = SwitchPort.objects.get(pk=pk)
-         url = 'list_switches'
-    p.delete()
-    messages.success(request, f'{p} successfully deleted')
-    return redirect(url)
+    if request.user.has_perm('members.add_member'):
+        if model == 'Member':
+            p = Member.objects.get(pk=pk)
+            url = 'list_members'
+        elif model == 'POP':
+            p = POP.objects.get(pk=pk)
+            url = 'list_pops'
+        elif model == 'PortConnection':
+             p = PortConnection.objects.get(pk=pk)
+             url = 'home'
+        elif model == 'Switch':
+             p = Switch.objects.get(pk=pk)
+             url = 'list_switches'
+        elif model == 'SwitchPort': 
+             p = SwitchPort.objects.get(pk=pk)
+             url = 'list_switches'
+        p.delete()
+        messages.success(request, f'{p} successfully deleted')
+        return redirect(url)
 
 @login_required
 def add_or_edit_pop(request, pk=None, slug=None):

@@ -4,8 +4,14 @@ $('.reset-button').on('click', function(){
     $("select").each(function() { this.selectedIndex = 0 });
     $(".numberinput").val("");
     $(".dateinput").val("");
-    var url = $("#Url").attr("data-url");
-    window.location.href = url;
+    $("#table-length").val("100");
+
+
+    // var url = $("#Url").attr("data-url");
+    // window.location.href = url;
+
+    submitFilter();
+
 });
 
 // Confirm before deleting an item
@@ -203,7 +209,7 @@ function submitFilter () {
     var date_connected_max = $('#id_date_connected_max').val();
 
 
-    $.ajax({ 
+    $.ajax({  
       url: url,
       data: {
         'port_capacity': port_capacity,
@@ -225,6 +231,7 @@ function submitFilter () {
         showSelectedColumns();
         // Also show previosly selected no of rows 
         changeTableRows();
+        
       }
     });
 
